@@ -4,7 +4,17 @@
  */
 import React from 'react';
 import { Button } from 'antd-mobile';
+import { request } from '../../common/request';
 import './index.less';
+
+request('/api/test', {
+  test: 1321,
+  dadd: {
+    dasd: 131
+  }
+}, {
+  method: 'get'
+}).then(console.log).catch(console.log);
 
 const app = () => (
   <div>
