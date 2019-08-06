@@ -1,0 +1,11 @@
+[
+  {
+    "target": "http://10.64.26.169:8921",
+    "context": [
+      "/api"
+    ],
+    "headers": {
+      "Host": "test.aelf.io"
+    }
+  }
+]
