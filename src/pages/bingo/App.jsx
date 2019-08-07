@@ -3,9 +3,14 @@
  * @author atom-yang
  */
 import React from 'react';
-import { Button } from 'antd-mobile';
+import AElf from 'aelf-sdk/dist/aelf.umd';
 import { request } from '../../common/request';
 import './index.less';
+
+import BingoGame from './containers/play';
+
+const defaultPrivateKey = 'a59c14882c023d63e84e5faf36558fdc8dbf1063eed45ce7e507f1cd9bcde1d9';
+const wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
 
 request('/api/test', {
   test: 1321,
@@ -18,10 +23,11 @@ request('/api/test', {
 
 const app = () => (
   <div>
-    <div className="index-container">
+    <BingoGame wallet={wallet} />
+    {/* <div className="index-container">
       游戏首页
       <Button>按钮</Button>
-    </div>
+    </div> */}
   </div>
 );
 export default React.memo(app);
