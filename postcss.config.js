@@ -6,6 +6,11 @@
 module.exports = {
   plugins: {
     cssnano: {},
-    'postcss-preset-env': {}
+    'postcss-preset-env': {},
+    // 'postcss-px-to-viewport': {
+    //   exclude: [
+    //     /node_modules/
+    //   ]
+    // }
   }
 };

@@ -56,12 +56,12 @@ const prodConfig = {
       })
     ],
     splitChunks: {
-      chunks: 'initial',
+      chunks: 'base.js',
       cacheGroups: {
         commons: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'initial'
+          chunks: 'base.js'
         },
         default: false
       }

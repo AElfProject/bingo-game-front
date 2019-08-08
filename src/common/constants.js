@@ -3,7 +3,13 @@
  * @author atom-yang
  */
 
-// 请求路径
+// request path
 export const API_PATH = {
-  TEST: '/api/test'
+  TEST: '/api/test',
+  INIT_CSRF_TOKEN: '/bingo/initToken'
+};
+
+export const STORE_KEY = {
+  KEY_STORE: 'bingo_keystore',
+  ADDRESS: 'bingo_wallet_address'
 };
