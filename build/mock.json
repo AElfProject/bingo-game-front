@@ -1,3 +1,4 @@
 {
-  "/api/test": "../mock/test.json"
+  "/api/test": "../mock/test.json",
+  "/bingo/register": "../mock/register.json"
 }
