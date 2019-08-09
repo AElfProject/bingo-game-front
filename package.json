@@ -26,10 +26,13 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
-    "aelf-sdk": "^3.2.11",
+    "aelf-sdk": "^3.2.12",
     "antd-mobile": "^2.2.14",
     "axios": "^0.19.0",
     "classnames": "^2.2.6",
+    "cookie": "^0.4.0",
+    "i18next": "^17.0.9",
+    "i18next-browser-languagedetector": "^3.0.3",
     "lodash": "^4.17.15",
     "lodash-decorators": "^6.0.1",
     "memoize-one": "^5.0.5",
@@ -37,13 +40,14 @@
     "query-string": "5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-i18next": "^10.11.5",
     "react-if": "^3.4.3",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "store": "^2.0.12"
+    "store2": "^2.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -85,6 +89,7 @@
     "postcss-less": "^3.1.4",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
+    "postcss-px-to-viewport": "^1.1.1",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
     "style-loader": "^0.23.1",
