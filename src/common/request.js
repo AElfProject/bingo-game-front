@@ -32,7 +32,7 @@ const purify = rawData => (needPurify(rawData)
 const handleInvalidError = ({ data }) => {
   // 处理response数据的errno
   if (+data.code === 0) {
-    return data.data;
+    return data;
   }
   throw new Error(data);
   // todo: err handle
@@ -49,7 +49,7 @@ const handleRequestError = error => {
 
 async function getCsrfToken() {
   const cookies = cookie.parse(document.cookie);
-  if (cookies.csrfToken && cookies.csrfToken.length > 0) {
+  if ((cookies.csrfToken && cookies.csrfToken.length > 0) || process.env.NODE_ENV !== 'production') {
     return cookies.csrfToken;
   }
   await axios.get(API_PATH.INIT_CSRF_TOKEN);
