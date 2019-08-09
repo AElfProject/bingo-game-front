@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Flex, List, InputItem, WhiteSpace, Button, Toast, ActivityIndicator, Modal, Tabs
 } from 'antd-mobile';
@@ -8,6 +9,7 @@ import PropTypes from 'prop-types';
 import { localHttp } from '../../common/constants';
 import Navigation from './Navigation';
 import './index.less';
+import Record from './Record';
 
 class BingoGame extends React.Component {
   static defaultProps = {
@@ -16,11 +18,18 @@ class BingoGame extends React.Component {
     }
   }
 
+  static propTypes = {
+    wallet: PropTypes.shape({
+      address: PropTypes.string.isRequired
+    })
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       // When the contract is awarded, the page can be displayed
-      loaded: false,
+      // loaded: false,
+      loaded: true,
       cards: 0,
       // Determine whether the input is correct
       inputHasError: false,
@@ -39,6 +48,7 @@ class BingoGame extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     const { sha256 } = AElf.utils;
     const { wallet } = this.props;
     const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
@@ -174,6 +184,11 @@ class BingoGame extends React.Component {
     }
   };
 
+  // dispatch = () => {
+  //   const { dispatch } = this.props;
+  //   dispatch({ type: 'SERVICE_FETCH_LIST_SUCCESS', });
+  // }
+
   render() {
     const {
       cards,
@@ -261,28 +276,24 @@ class BingoGame extends React.Component {
                   { title: '所有记录', sub: '1' },
                   { title: '我的记录', sub: '2' },
                 ]}
-                initialPage={1}
+                initialPage={0}
                 onChange={(tab, index) => { console.log('onChange', index, tab); }}
                 onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
               >
-                <div>所有记录</div>
-                <div>我的记录</div>
+                <Record type="allRecords" />
+                <Record type="myRecords" />
               </Tabs>
             </Flex>
           </Then>
 
           <Else><ActivityIndicator size="large" /></Else>
         </If>
-
+        {/* <Button onClick={this.dispatch}>test</Button> */}
       </>
     );
   }
 }
 
-BingoGame.propTypes = {
-  wallet: PropTypes.shape({
-    address: PropTypes.string.isRequired
-  })
-};
-
-export default BingoGame;
+export default connect(
+  state => state,
+)(BingoGame);
