@@ -7,21 +7,21 @@ import { If, Then, Else } from 'react-if';
 import AElf from 'aelf-sdk';
 import PropTypes from 'prop-types';
 import { localHttp } from '../../common/constants';
-import Navigation from './Navigation';
 import './index.less';
 import Record from './Record';
+import Navigation from '../../components/Navigation';
 
 class BingoGame extends React.Component {
   static defaultProps = {
     wallet: {
       address: 'csoxW4vTJNT9gdvyWS6W7UqEdkSo9pWyJqBoGSnUHXVnj4ykJ'
-    }
+    },
   }
 
   static propTypes = {
     wallet: PropTypes.shape({
       address: PropTypes.string.isRequired
-    })
+    }),
   };
 
   constructor(props) {
@@ -199,7 +199,7 @@ class BingoGame extends React.Component {
     } = this.state;
     return (
       <>
-        <Navigation />
+        <Navigation title="Bingo" type="play" />
         <If condition={loaded}>
           <Then>
             <Flex justify="center" direction="column">

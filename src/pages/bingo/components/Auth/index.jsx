@@ -17,7 +17,7 @@ const AuthRouter = props => {
     if (!isLogin && rest.path === '/login') {
       return <Redirect to="/login" />;
     }
-    return <Component {...innerProps} />;
+    return <Component {...innerProps} {...rest} />;
   };
   return (
     <Route

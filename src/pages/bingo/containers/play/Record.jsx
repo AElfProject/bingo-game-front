@@ -60,15 +60,15 @@ class Record extends React.Component {
       <>
         <div className={className}>
           {
-            title.map(data => (<div>{data}</div>))
+            title.map(data => (<div key={data}>{data}</div>))
           }
         </div>
         {
           info.map(data => {
             const arr = Object.values(data);
             return (
-              <div className={className}>
-                {arr.map(d => (<div>{d}</div>))}
+              <div key={arr[0]} className={className}>
+                {arr.map((d, i) => (<div key={`${arr[0] + i}`}>{d}</div>))}
               </div>
             );
           })

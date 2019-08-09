@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd-mobile';
+import AElf from 'aelf-sdk';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +15,14 @@ import {
 } from 'react-router-dom';
 import AuthRoute from './components/Auth';
 import Register from './containers/Register/index';
+import BingoGame from './containers/play';
+import Mnemonic from './containers/Mnemonic';
 import './common/i18n';
 import './index.less';
+
+const mnemonic = 'orange learn result add snack curtain double state expose bless also clarify';
+
+const wallet = AElf.wallet.getWalletByMnemonic(mnemonic);
 
 const demo = () => {
   console.log('替换为各容器组件');
@@ -27,26 +33,28 @@ const demo = () => {
 
 const App = props => {
   const { isLogin } = props;
-  const { t, i18n } = useTranslation();
-  const changeZh = async () => {
-    await i18n.changeLanguage('zh');
-  };
-  const changeEn = async () => {
-    await i18n.changeLanguage('en');
-  };
+  const { t } = useTranslation();
+
+  // const { i18n } = useTranslation();
+  // const changeZh = async () => {
+  //   await i18n.changeLanguage('zh');
+  // };
+  // const changeEn = async () => {
+  //   await i18n.changeLanguage('en');
+  // };
   return (
     <>
       <div className="index-container">
+        {/* <Button onClick={changeZh}>切换中文</Button>
+        <Button onClick={changeEn}>switch to english</Button> */}
         {t('name')}
-        <Button onClick={changeZh}>切换中文</Button>
-        <Button onClick={changeEn}>switch to english</Button>
       </div>
       <HashRouter>
         <Switch>
           <Route exact path="/register" component={Register} />
           <AuthRoute exact isLogin={isLogin} path="/login" component={demo} />
-          <AuthRoute exact isLogin={isLogin} path="/play" component={demo} />
-          <AuthRoute exact isLogin={isLogin} path="/mnemonic" component={demo} />
+          <AuthRoute exact isLogin={isLogin} wallet={wallet} path="/play" component={BingoGame} />
+          <AuthRoute exact isLogin={isLogin} path="/mnemonic" component={Mnemonic} />
           <Route component={demo} />
         </Switch>
       </HashRouter>
