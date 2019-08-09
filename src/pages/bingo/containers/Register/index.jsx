@@ -15,7 +15,9 @@ import { STORE_KEY } from '../../../../common/constants';
 function createNewWallet(password = '', saver) {
   const wallet = AElf.wallet.createNewWallet();
   const { address } = wallet;
-  const keyStore = AElf.wallet.keyStore.getKeystore(wallet, password);
+  const keyStore = AElf.wallet.keyStore.getKeystore(wallet, password, {
+    cipher: 'aes-256-cbc'
+  });
   store(STORE_KEY.KEY_STORE, keyStore);
   store(STORE_KEY.ADDRESS, address);
   saver({

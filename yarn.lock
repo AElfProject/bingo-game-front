@@ -1123,10 +1123,10 @@ add-dom-event-listener@^1.1.0:
   dependencies:
     object-assign "4.x"
 
-aelf-sdk@^3.2.11:
-  version "3.2.11"
-  resolved "https://registry.yarnpkg.com/aelf-sdk/-/aelf-sdk-3.2.11.tgz#d17da6ea73e22d404e5cf4bc10c8b085864d06ff"
-  integrity sha512-rwEdAC74FLdECKCqHizpZ3Y2H5jus7o8Q4qWR8lyvav+ObNpxQG3k/dHmM87SJ/TCwxOvvwWySv3orKp0TZowg==
+aelf-sdk@^3.2.12:
+  version "3.2.12"
+  resolved "https://registry.yarnpkg.com/aelf-sdk/-/aelf-sdk-3.2.12.tgz#a8962cc06d44f92ecfd9d2022ef3e3b659ccb195"
+  integrity sha512-7crNN1YsvpwWOul2S4H2pAZMM7Zw2gkzgQD71jFrElQW2ctKB47jRW6I9iOjyxR1r2nyrrtsHJissuJFxhBQog==
   dependencies:
     "@aelfqueen/protobufjs" "^6.8.9"
     "@babel/runtime" "^7.4.5"
