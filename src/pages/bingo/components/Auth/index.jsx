@@ -2,30 +2,41 @@
  * @file auth root
  * @author atom-yang
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import store from 'store2';
+import { useDispatch } from 'react-redux';
 import { Route, Redirect, withRouter } from 'react-router-dom';
+import { BASE_INFO } from '../../actions/base';
 import { hasRegistered } from '../../common/utils';
 import { STORE_KEY } from '../../../../common/constants';
 
 const AuthRouter = props => {
-  const isLoginInSession = store.session.get(STORE_KEY.IS_LOGIN, true);
   const { component: Component, isLogin, ...rest } = props;
   const hasAccount = hasRegistered();
-  // eslint-disable-next-line no-unused-vars
-  const isLoginWithSession = isLogin || isLoginInSession;
+  const walletInfo = store.session.get(STORE_KEY.WALLET_INFO);
+  const isLoginWithSession = isLogin || Object.keys(walletInfo || {}).length > 0;
   const { path } = rest;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!isLogin && Object.keys(walletInfo || {}).length > 0) {
+      // log in based on session storage
+      dispatch({
+        type: BASE_INFO.LOG_IN_BINGO,
+        payload: walletInfo
+      });
+    }
+  }, []);
   const renderProps = innerProps => {
     if (!hasAccount && path !== '/register') {
       return <Redirect to="/register" />;
     }
-    if (hasAccount && !isLogin && path !== '/login') {
+    if (hasAccount && !isLoginWithSession && path !== '/login') {
       return <Redirect to="/login" />;
     }
-    // if (hasAccount && isLoginWithSession && path !== '/login') {
-    //   return <Redirect to="/login" />;
-    // }
+    if (hasAccount && isLoginWithSession && (path === '/register' || path === '/login')) {
+      return <Redirect to="/play" />;
+    }
     return <Component {...innerProps} {...rest} />;
   };
   return (

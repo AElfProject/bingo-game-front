@@ -104,6 +104,7 @@ class Register extends React.PureComponent {
           name: values.name,
           count
         });
+        store.session.set(STORE_KEY.WALLET_INFO, wallet);
         this.setState({
           showModal: true
         });
