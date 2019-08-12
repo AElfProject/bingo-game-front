@@ -42,7 +42,7 @@ class Login extends React.PureComponent {
     const { mnemonic } = AElf.wallet.keyStore.unlockKeystore(keyStore, password);
     const wallet = AElf.wallet.getWalletByMnemonic(mnemonic);
     logToPlay(wallet);
-    store.session.set(STORE_KEY.IS_LOGIN, true);
+    store.session.set(STORE_KEY.WALLET_INFO, wallet);
     console.log(wallet);
     history.push('/play');
   };

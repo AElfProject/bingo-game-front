@@ -13,7 +13,8 @@ export const API_PATH = {
 export const STORE_KEY = {
   KEY_STORE: 'bingo_keystore',
   ADDRESS: 'bingo_wallet_address',
-  IS_LOGIN: 'bingo_is_login'
+  IS_LOGIN: 'bingo_is_login',
+  WALLET_INFO: 'bingo_wallet'
 };
 
 export const REG_COLLECTION = {
