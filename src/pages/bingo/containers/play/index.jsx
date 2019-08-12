@@ -48,7 +48,7 @@ class BingoGame extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
+    console.log('play', this.props);
     const { sha256 } = AElf.utils;
     const { wallet } = this.props;
     const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
@@ -294,6 +294,11 @@ class BingoGame extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  recordInfo: state.recordInfo
+});
+
 export default connect(
-  state => state,
+  // state => state,
+  mapStateToProps
 )(BingoGame);

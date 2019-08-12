@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import store from 'store2';
 import AElf from 'aelf-sdk';
 import {
-  Button
+  Button, List, InputItem
 } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
@@ -31,7 +31,8 @@ class Login extends React.PureComponent {
   static defaultProps = {
     wallet: {
       address: '',
-      mnemonic: ''
+      mnemonic: '',
+      password: null
     }
   };
 
@@ -48,13 +49,30 @@ class Login extends React.PureComponent {
 
   handleLogin = () => {
     // todo: get password from input
-    this.getWalletFromKeyStore('123123123');
+    const { password } = this.state;
+    this.getWalletFromKeyStore(password); // '123123123'
   };
+
+  onChange = password => {
+    this.setState({
+      password
+    });
+  }
 
   render() {
     console.log(this.props);
     return (
       <div className="bingo-login">
+        <List>
+          <InputItem
+            type="password"
+            placeholder="please input password"
+            onChange={this.onChange}
+            clear
+          >
+            密码
+          </InputItem>
+        </List>
         <Button onClick={this.handleLogin}>登录</Button>
       </div>
     );

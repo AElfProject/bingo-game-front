@@ -16,7 +16,7 @@ import AuthRoute from './components/Auth';
 import Register from './containers/Register/index';
 import BingoGame from './containers/play';
 import Mnemonic from './containers/Mnemonic';
-import Login from './containers/Login/index';
+import Login from './containers/Login';
 import './common/i18n';
 import './index.less';
 

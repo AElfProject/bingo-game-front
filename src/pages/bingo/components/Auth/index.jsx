@@ -17,7 +17,6 @@ const AuthRouter = props => {
   const isLoginWithSession = isLogin || isLoginInSession;
   // todo for test,remember to delete
   // eslint-disable-next-line no-const-assign
-  isLogin = true;
   const { path } = rest;
   const renderProps = innerProps => {
     if (!hasAccount && path !== '/register') {
