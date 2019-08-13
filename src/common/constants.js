@@ -7,7 +7,10 @@
 export const API_PATH = {
   TEST: '/api/test',
   INIT_CSRF_TOKEN: '/bingo/initToken',
-  REGISTER: '/bingo/register'
+  REGISTER: '/bingo/register',
+  TOP_RECORDS: '/bingo/topRecords',
+  PERSONAL_RECORDS: '/bingo/personalRecords',
+  RECORD_RESULT: '/bingo/recordResult'
 };
 
 export const STORE_KEY = {

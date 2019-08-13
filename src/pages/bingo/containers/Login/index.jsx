@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import store from 'store2';
 import AElf from 'aelf-sdk';
 import {
-  Button, List, InputItem
+  Button, List, InputItem, Toast
 } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
@@ -32,9 +32,22 @@ class Login extends React.PureComponent {
     wallet: {
       address: '',
       mnemonic: '',
-      password: null
+      password: null,
     }
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      address: ''
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      address: store.get(STORE_KEY.ADDRESS)
+    });
+  }
 
   getWalletFromKeyStore = password => {
     const { history, login: logToPlay } = this.props;
@@ -49,8 +62,15 @@ class Login extends React.PureComponent {
 
   handleLogin = () => {
     // todo: get password from input
-    const { password } = this.state;
-    this.getWalletFromKeyStore(password); // '123123123'
+    try {
+      const { password } = this.state;
+      this.getWalletFromKeyStore(password); // '123123123'
+    } catch (e) {
+      console.log('trycatch', e);
+      if (e.error === 200001) {
+        Toast.info(e.errorMessage);
+      }
+    }
   };
 
   onChange = password => {
@@ -60,10 +80,16 @@ class Login extends React.PureComponent {
   }
 
   render() {
-    console.log(this.props);
+    const { address } = this.state;
     return (
       <div className="bingo-login">
         <List>
+          <InputItem
+            value={address}
+            disabled
+          >
+            地址
+          </InputItem>
           <InputItem
             type="password"
             placeholder="please input password"

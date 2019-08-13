@@ -1,5 +1,7 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import store from 'store2';
 import {
   Flex, List, InputItem, WhiteSpace, Button, Toast, ActivityIndicator, Modal, Tabs
 } from 'antd-mobile';
@@ -10,17 +12,42 @@ import { localHttp } from '../../common/constants';
 import './index.less';
 import Record from './Record';
 import Navigation from '../../components/Navigation';
+import { STORE_KEY } from '../../../../common/constants';
+import { getTopRecords, getPersonalRecords, getRecordsResult } from '../../actions/recordinfo';
 
 class BingoGame extends React.Component {
   static defaultProps = {
     wallet: {
       address: 'csoxW4vTJNT9gdvyWS6W7UqEdkSo9pWyJqBoGSnUHXVnj4ykJ'
     },
+    getTopRecords: () => {},
+    getPersonalRecords: () => {},
+    getRecordsResult: () => {},
+
+    recordInfo: {
+      personalRecords: {
+        list: []
+      },
+      topRecords: {
+        list: []
+      },
+    }
   }
 
   static propTypes = {
     wallet: PropTypes.shape({
       address: PropTypes.string.isRequired
+    }),
+    getTopRecords: PropTypes.func,
+    getPersonalRecords: PropTypes.func,
+    getRecordsResult: PropTypes.func,
+    recordInfo: PropTypes.shape({
+      personalRecords: PropTypes.shape({
+        list: PropTypes.array
+      }),
+      topRecords: PropTypes.shape({
+        list: PropTypes.array
+      })
     }),
   };
 
@@ -43,15 +70,20 @@ class BingoGame extends React.Component {
     this.bingoGameContract = null;
   }
 
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
     console.log('play', this.props);
+
     const { sha256 } = AElf.utils;
-    const { wallet } = this.props;
+    const { wallet, getTopRecords: topRecords, getPersonalRecords: personalRecords } = this.props;
     const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
+
+    // get all records;
+    topRecords();
+    personalRecords({
+      address: store.get(STORE_KEY.ADDRESS),
+      pageNum: 1,
+      pageSize: 20
+    });
 
     aelf.chain.getChainStatus()
       .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
@@ -154,14 +186,33 @@ class BingoGame extends React.Component {
         opening: true
       });
       const { inputCards } = this.state;
+
+      // local chain contract start
       const { bingoGameContract } = this;
+
 
       bingoGameContract.Play({ value: inputCards })
         .then(result => bingoGameContract.Bingo(result.TransactionId))
         .then(
           this.getBalance
         )
-        .then(difference => {
+        .then(async difference => {
+          const {
+            getTopRecords: topRecords, getRecordsResult: recordsResult, getPersonalRecords: personalRecords
+          } = this.props;
+
+          await recordsResult({
+            result: difference,
+            address: store.get(STORE_KEY.ADDRESS)
+          });
+
+          personalRecords({
+            address: store.get(STORE_KEY.ADDRESS),
+            pageNum: 1,
+            pageSize: 20
+          });
+          topRecords();
+
           let info = null;
           if (difference >= 0) {
             info = `+ ${difference} CARD`;
@@ -181,13 +232,27 @@ class BingoGame extends React.Component {
           });
           console.log(err);
         });
+      // local chain contract end
     }
   };
 
-  // dispatch = () => {
-  //   const { dispatch } = this.props;
-  //   dispatch({ type: 'SERVICE_FETCH_LIST_SUCCESS', });
-  // }
+  tabChange = tab => {
+    const { getTopRecords: topRecords, getPersonalRecords: personalRecords } = this.props;
+    switch (tab.sub) {
+      case 'allRecords':
+        topRecords();
+        break;
+      case 'myRecords':
+        personalRecords({
+          address: store.get(STORE_KEY.ADDRESS),
+          pageNum: 1,
+          pageSize: 20
+        });
+        break;
+      default:
+        break;
+    }
+  }
 
   render() {
     const {
@@ -197,6 +262,17 @@ class BingoGame extends React.Component {
       inputHasError,
       opening
     } = this.state;
+
+    const {
+      recordInfo: {
+        personalRecords: {
+          list: personalData
+        },
+        topRecords: {
+          list: topData
+        },
+      }
+    } = this.props;
     return (
       <>
         <Navigation title="Bingo" type="play" />
@@ -273,22 +349,21 @@ class BingoGame extends React.Component {
 
               <Tabs
                 tabs={[
-                  { title: '所有记录', sub: '1' },
-                  { title: '我的记录', sub: '2' },
+                  { title: '所有记录', sub: 'allRecords' },
+                  { title: '我的记录', sub: 'myRecords' },
                 ]}
                 initialPage={0}
-                onChange={(tab, index) => { console.log('onChange', index, tab); }}
-                onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
+                onChange={this.tabChange}
+                // onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
               >
-                <Record type="allRecords" />
-                <Record type="myRecords" />
+                <Record type="allRecords" info={topData} />
+                <Record type="myRecords" info={personalData} />
               </Tabs>
             </Flex>
           </Then>
 
           <Else><ActivityIndicator size="large" /></Else>
         </If>
-        {/* <Button onClick={this.dispatch}>test</Button> */}
       </>
     );
   }
@@ -297,8 +372,11 @@ class BingoGame extends React.Component {
 const mapStateToProps = state => ({
   recordInfo: state.recordInfo
 });
+const mapDispatchToProps = dispatch => bindActionCreators({
+  getTopRecords, getPersonalRecords, getRecordsResult
+}, dispatch);
 
 export default connect(
-  // state => state,
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(BingoGame);

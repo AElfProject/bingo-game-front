@@ -5,11 +5,13 @@ import './index.less';
 
 class Record extends React.Component {
   static defaultProps = {
-    type: 'allRecords'
+    type: 'allRecords',
+    info: []
   }
 
   static propTypes = {
-    type: PropTypes.string
+    type: PropTypes.string,
+    info: PropTypes.arrayOf(PropTypes.object)
   }
 
   constructor(props) {
@@ -17,31 +19,6 @@ class Record extends React.Component {
     this.state = {};
     this.allRecords = ['玩家', '余额', '投注次数'];
     this.myRecords = ['下注次数', '余额'];
-
-    this.allRecordsData = {
-      code: 0,
-      msg: 'success',
-      data: {
-        total: 100,
-        list: [{
-          address: 'csoxW4vTJNT9gdvyWS6W7UqEdkSo9pWyJqBoGSnUHXVnj4ykJ',
-          balance: 1231, // 余额
-          times: 12321 // 次数
-        }]
-      }
-    };
-
-    this.myRecordsData = {
-      code: 0,
-      msg: 'success',
-      data: {
-        total: 100,
-        list: [{
-          time: 1, // 次序
-          result: -100 // 结果
-        }]
-      }
-    };
   }
 
   recordsMap = (type, info) => {
@@ -78,14 +55,7 @@ class Record extends React.Component {
   }
 
   render() {
-    const { type } = this.props;
-    let info = null;
-    if (type === 'allRecords') {
-      info = this.allRecordsData.data.list;
-    } else if (type === 'myRecords') {
-      info = this.myRecordsData.data.list;
-    }
-
+    const { type, info } = this.props;
     return this.recordsMap(type, info);
   }
 }
