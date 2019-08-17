@@ -19,6 +19,7 @@ import Mnemonic from './containers/Mnemonic';
 import Login from './containers/Login';
 import './common/i18n';
 import './index.less';
+import Background from './components/Background';
 
 const mnemonic = 'orange learn result add snack curtain double state expose bless also clarify';
 
@@ -36,13 +37,15 @@ const App = props => {
   console.log(isLogin);
   return (
     <HashRouter>
-      <Switch>
-        <AuthRoute exact path="/register" component={Register} />
-        <AuthRoute exact isLogin={isLogin} path="/login" component={Login} />
-        <AuthRoute exact isLogin={isLogin} path="/play" wallet={wallet} component={BingoGame} />
-        <AuthRoute exact isLogin={isLogin} path="/mnemonic" component={Mnemonic} />
-        <Route component={demo} />
-      </Switch>
+      <Background>
+        <Switch>
+          <AuthRoute exact path="/register" component={Register} />
+          <AuthRoute exact isLogin={isLogin} path="/login" component={Login} />
+          <AuthRoute exact isLogin={isLogin} path="/play" wallet={wallet} component={BingoGame} />
+          <AuthRoute exact isLogin={isLogin} path="/mnemonic" component={Mnemonic} />
+          <Route component={demo} />
+        </Switch>
+      </Background>
     </HashRouter>
   );
 };

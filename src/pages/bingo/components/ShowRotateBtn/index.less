@@ -1,0 +1,42 @@
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@fontSize: 20px;
+// @btnWidth: 90px;
+.ShowBtnConfirm {
+  //background: url(../../../../static/buttonBG.png) no-repeat;
+  // width: @btnWidth;
+  // height: @btnWidth;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #2ffffe;
+  font-size: @fontSize;
+  font-weight: bold;
+
+  position: relative;
+  overflow: hidden;
+
+  > span {
+    width: 2 * @fontSize;
+  }
+
+  :before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: url(../../../../static/showBtnBg.png) no-repeat;
+    background-size: cover;
+    animation: 5s linear 0s normal none infinite rotate;
+  }
+}

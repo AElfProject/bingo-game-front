@@ -6,12 +6,11 @@ import React from 'react';
 import store from 'store2';
 import AElf from 'aelf-sdk';
 import {
-  NavBar,
-  Button,
   InputItem,
   List,
   Modal,
-  Icon
+  WhiteSpace,
+  Toast
 } from 'antd-mobile';
 import { bindActionCreators, compose } from 'redux';
 import memoizeOne from 'memoize-one';
@@ -22,6 +21,9 @@ import { withTranslation } from 'react-i18next';
 import { register } from '../../actions/base';
 import { request } from '../../../../common/request';
 import { API_PATH, STORE_KEY, REG_COLLECTION } from '../../../../common/constants';
+import RotateButton from '../../components/RotateButton';
+import ShowRotateBtn from '../../components/ShowRotateBtn';
+import ModalContent from '../../components/ModalContent';
 
 import './index.less';
 
@@ -36,7 +38,11 @@ class Register extends React.PureComponent {
     t: PropTypes.func.isRequired,
     history: PropTypes.shape({
       push: PropTypes.func
-    }).isRequired
+    }).isRequired,
+    i18n: PropTypes.shape({
+      changeLanguage: PropTypes.func,
+      language: PropTypes.string
+    })
   };
 
   static defaultProps = {
@@ -45,7 +51,11 @@ class Register extends React.PureComponent {
     wallet: {
       address: '',
       mnemonic: ''
-    }
+    },
+    i18n: {
+      changeLanguage: () => {},
+      language: 'zh'
+    },
   };
 
   state = {
@@ -63,7 +73,7 @@ class Register extends React.PureComponent {
       name: '',
       password: '',
       confirmPassword: ''
-    }
+    },
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -82,12 +92,34 @@ class Register extends React.PureComponent {
     history.push('/play');
   };
 
-  // eslint-disable-next-line react/destructuring-assignment
-  footer = [{ text: this.props.t('confirm'), onPress: this.onConfirm }];
-
   register = () => {
+    // this.setState({
+    //   showModal: true
+    // });
+    // return;
+
+    const { errors, values, isLoading } = this.state;
+    let info = null;
+    if (errors.nameError) {
+      info = errors.nameMsg;
+    } else if (errors.passwordError) {
+      info = errors.passwordMsg;
+    } else if (errors.confirmPassword) {
+      info = errors.confirmPasswordMsg;
+    } else {
+      info = 'please check your input';
+    }
+
+    if (errors.nameError
+      || errors.passwordError
+      || errors.confirmPasswordError
+      || Object.values(values).filter(v => v.length === 0).length > 0
+      || isLoading) {
+      Toast.info(info);
+      return;
+    }
+
     const { t, register: saver } = this.props;
-    const { values } = this.state;
     this.setState({
       isLoading: true
     });
@@ -104,15 +136,14 @@ class Register extends React.PureComponent {
           name: values.name,
           count
         });
-        store.session.set(STORE_KEY.WALLET_INFO, wallet);
-        this.setState({
-          showModal: true
-        });
         const keyStore = AElf.wallet.keyStore.getKeystore(wallet, values.password, {
           cipher: 'aes-256-cbc'
         });
         store(STORE_KEY.KEY_STORE, keyStore);
         store(STORE_KEY.ADDRESS, address);
+        this.setState({
+          showModal: true
+        });
       } else {
         throw new Error(res.msg);
       }
@@ -212,82 +243,136 @@ class Register extends React.PureComponent {
     }
   };
 
+  onErrorClick = type => {
+    const { errors } = this.state;
+    let info = null;
+    let err = null;
+
+    switch (type) {
+      case 'nickName':
+        err = errors.nameError;
+        info = errors.nameMsg;
+        break;
+      case 'password':
+        err = errors.passwordError;
+        info = errors.passwordMsg;
+        break;
+      case 'confirmPassword':
+        err = errors.confirmPasswordError;
+        info = errors.confirmPasswordMsg;
+        break;
+      default:
+        break;
+    }
+    if (err) { Toast.info(info); }
+  }
+
+  switchLanguage = () => {
+    const { i18n } = this.props;
+    let nextLanguage = 'en';
+    if (i18n.language === 'en') {
+      nextLanguage = 'zh';
+    }
+    i18n.changeLanguage(nextLanguage);
+  }
+
   render() {
-    const { t, wallet, count } = this.props;
+    const { t, count, wallet } = this.props;
     const {
       values,
       errors,
       showModal,
-      isLoading
     } = this.state;
     return (
       <div className="bingo-register">
-        <NavBar>{t('register')}</NavBar>
-        <div className="bingo-register-title">Bingo Game</div>
-        <div className="bingo-register-input">
-          <List className="bingo-register-input-area">
-            <InputItem
-              placeholder={t('nickName')}
-              error={errors.nameError}
-              onChange={this.nameInput}
-              value={values.name}
-              clear
-            />
-            <div className="bingo-register-error-msg">
-              {errors.nameError && errors.nameMsg}
-            </div>
-            <InputItem
-              type="password"
-              error={errors.passwordError}
-              onChange={this.passwordInput}
-              value={values.password}
-              placeholder={t('password')}
-              clear
-            />
-            <div className="bingo-register-error-msg">
-              {errors.passwordError && errors.passwordMsg}
-            </div>
-            <InputItem
-              type="password"
-              error={errors.confirmPasswordError}
-              onChange={this.confirmPasswordInput}
-              value={values.confirmPassword}
-              placeholder={t('confirmPassword')}
-              clear
-            />
-            <div className="bingo-register-error-msg">
-              {errors.confirmPasswordError && errors.confirmPasswordMsg}
-            </div>
-          </List>
-          <Button
-            loading={isLoading}
-            disabled={
-              errors.nameError
-              || errors.passwordError
-              || errors.confirmPasswordError
-              || Object.values(values).filter(v => v.length === 0).length > 0
-              || isLoading
-            }
-            onClick={this.register}
-          >
-            {t('register')}
-          </Button>
-          <Modal
-            visible={showModal}
-            onClose={this.onConfirm}
-            transparent
-            maskClosable
-            footer={this.footer}
-          >
-            <Icon type="check-circle-o" size="lg" />
-            <div>{t('registerSuccessTitle')}</div>
-            <div className="bingo-register-modal-body">
-              {this.modalContent(t('registerSuccessInfo', {
-                count,
-                address: wallet.address || ''
-              }))}
-            </div>
-          </Modal>
+        <div className="register-input">
+          <div className="inputLine">
+            <ShowRotateBtn name={t('nickName')} />
+            <List className="registerInputList">
+              <InputItem
+                className="inputItem"
+                error={errors.nameError}
+                onChange={this.nameInput}
+                value={values.name}
+                // placeholder={t('nickName')}
+                onErrorClick={() => this.onErrorClick('nickName')}
+              />
+            </List>
+          </div>
+          <WhiteSpace size="lg" />
+          <div className="inputLine">
+            <ShowRotateBtn name={t('password')} />
+            <List className="registerInputList">
+              <InputItem
+                className="inputItem"
+                type="password"
+                error={errors.passwordError}
+                onChange={this.passwordInput}
+                value={values.password}
+                // placeholder={t('password')}
+                onErrorClick={() => this.onErrorClick('password')}
+              />
+            </List>
+          </div>
+          <WhiteSpace size="lg" />
+          <div className="inputLine">
+            <ShowRotateBtn name={t('confirmPassword')} />
+            <List className="registerInputList">
+              <InputItem
+                className="inputItem"
+                type="password"
+                error={errors.confirmPasswordError}
+                onChange={this.confirmPasswordInput}
+                value={values.confirmPassword}
+                // placeholder={t('confirmPassword')}
+                onErrorClick={() => this.onErrorClick('confirmPassword')}
+              />
+            </List>
+          </div>
+        </div>
+        <RotateButton
+          name={t('register')}
+          click={this.register}
+        />
+        <Modal
+          visible={showModal}
+          onClose={this.onConfirm}
+          transparent
+          maskClosable
+          className="bingo-register-modal"
+        >
+          <ModalContent confirm={this.onConfirm} title="true">
+            <>
+              <div>
+                {t('registerSuccessInfoFir')}
+              </div>
+              <div className="modal-info-1">
+                {t('registerSuccessInfoSec')}
+              </div>
+              <div className="modal-info-2">{count}</div>
+              <div>
+                {t('registerSuccessInfoThird')}
+              </div>
+              <div className="modal-info-4">
+                ——
+                {t('address')}
+                ——
+              </div>
+              <div className="addressShow">
+                {wallet.address}
+              </div>
+            </>
+          </ModalContent>
+        </Modal>
+
+        <div
+          role="button"
+          tabIndex={0}
+          className="language-change"
+          onClick={this.switchLanguage}
+          onKeyDown={() => {}}
+        >
+          中文/ENGLISH
         </div>
       </div>
     );

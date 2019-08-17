@@ -1,56 +1,63 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { withTranslation } from 'react-i18next';
 import './index.less';
 
 class Record extends React.Component {
   static defaultProps = {
     type: 'allRecords',
-    info: []
+    info: [],
+    t: () => {}
   }
 
   static propTypes = {
     type: PropTypes.string,
-    info: PropTypes.arrayOf(PropTypes.object)
+    info: PropTypes.arrayOf(PropTypes.object),
+    t: PropTypes.func
   }
 
   constructor(props) {
     super(props);
     this.state = {};
-    this.allRecords = ['玩家', '余额', '投注次数'];
-    this.myRecords = ['下注次数', '余额'];
   }
 
   recordsMap = (type, info) => {
     let className = null;
     let title = [];
+    const { t } = this.props;
 
     if (type === 'allRecords') {
-      title = this.allRecords;
+      title = [t('player'), t('balance'), t('bets')];
       className = 'allRecords';
     } else if (type === 'myRecords') {
-      title = this.myRecords;
+      title = [t('bets'), t('balance')];
       className = 'myRecords';
     }
 
     return (
-      <>
-        <div className={className}>
+      <div className="record">
+        <div className={`${className} recordTitle`}>
           {
             title.map(data => (<div key={data}>{data}</div>))
           }
         </div>
-        {
-          info.map(data => {
-            const arr = Object.values(data);
-            return (
-              <div key={arr[0]} className={className}>
-                {arr.map((d, i) => (<div key={`${arr[0] + i}`}>{d}</div>))}
-              </div>
-            );
-          })
-        }
-      </>
+        <div className="recordShow">
+          <div className="record-tl" />
+          <div className="record-tr" />
+          <div className="record-bl" />
+          <div className="record-br" />
+          {
+            info.map(data => {
+              const arr = Object.values(data);
+              return (
+                <div key={arr[0]} className={className}>
+                  {arr.map((d, i) => (<div key={`${arr[0] + i}`}>{d}</div>))}
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
     );
   }
 
@@ -60,4 +67,4 @@ class Record extends React.Component {
   }
 }
 
-export default Record;
+export default withTranslation()(Record);

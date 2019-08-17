@@ -1,0 +1,41 @@
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@btnWidth: 150px;
+.btnConfirm {
+  //background: url(../../../../static/buttonBG.png) no-repeat;
+  width: @btnWidth;
+  height: @btnWidth;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+
+  position: relative;
+  overflow: hidden;
+
+  :before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: url(../../../../static/buttonBg.png) no-repeat;
+    background-size: cover;
+    animation: 5s linear 0s normal none infinite rotate;
+  }
+
+  > div {
+    width: 50px;
+  }
+}

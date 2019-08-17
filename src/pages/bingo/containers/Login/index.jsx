@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import store from 'store2';
 import AElf from 'aelf-sdk';
 import {
-  Button, List, InputItem, Toast
+  List, InputItem, Toast
 } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
@@ -15,6 +15,9 @@ import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import { login } from '../../actions/base';
 import { STORE_KEY } from '../../../../common/constants';
+import './index.less';
+import RotateButton from '../../components/RotateButton';
+import ShowRotateBtn from '../../components/ShowRotateBtn';
 
 class Login extends React.PureComponent {
   static propTypes = {
@@ -25,7 +28,12 @@ class Login extends React.PureComponent {
     login: PropTypes.func.isRequired,
     history: PropTypes.shape({
       push: PropTypes.func
-    }).isRequired
+    }).isRequired,
+    t: PropTypes.func,
+    i18n: PropTypes.shape({
+      changeLanguage: PropTypes.func,
+      language: PropTypes.string
+    })
   };
 
   static defaultProps = {
@@ -33,7 +41,12 @@ class Login extends React.PureComponent {
       address: '',
       mnemonic: '',
       password: null,
-    }
+    },
+    t: () => {},
+    i18n: {
+      changeLanguage: () => {},
+      language: 'zh'
+    },
   };
 
   constructor(props) {
@@ -79,11 +92,48 @@ class Login extends React.PureComponent {
     });
   }
 
+  switchLanguage = () => {
+    const { i18n } = this.props;
+    let nextLanguage = 'en';
+    if (i18n.language === 'en') {
+      nextLanguage = 'zh';
+    }
+    i18n.changeLanguage(nextLanguage);
+  }
+
   render() {
     const { address } = this.state;
+    const { t } = this.props;
     return (
       <div className="bingo-login">
-        <List>
+        <div>
+          <span className="title">Bingo</span>
+          <span className="title">Game</span>
+        </div>
+
+        <div className="inputLine">
+          <ShowRotateBtn name={t('address')} />
+          <List className="registerInputList">
+            <InputItem
+              className="inputItem"
+              value={address}
+              disabled
+            />
+          </List>
+        </div>
+        <div className="inputLine">
+          <ShowRotateBtn name={t('password')} />
+          <List className="registerInputList">
+            <InputItem
+              className="inputItem"
+              type="password"
+              onChange={this.onChange}
+              clear
+            />
+          </List>
+        </div>
+
+        {/* <List>
           <InputItem
             value={address}
             disabled
@@ -98,8 +148,21 @@ class Login extends React.PureComponent {
           >
             密码
           </InputItem>
-        </List>
-        <Button onClick={this.handleLogin}>登录</Button>
+        </List> */}
+        {/* <Button onClick={this.handleLogin}>登录</Button> */}
+        <RotateButton
+          click={this.handleLogin}
+          name={t('login')}
+        />
+        <div
+          role="button"
+          tabIndex={0}
+          className="language-change"
+          onClick={this.switchLanguage}
+          onKeyDown={() => {}}
+        >
+          中文/ENGLISH
+        </div>
       </div>
     );
   }

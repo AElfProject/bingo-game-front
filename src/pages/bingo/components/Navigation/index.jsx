@@ -9,7 +9,8 @@ const { Item } = Popover;
 class Navigation extends React.Component {
   static defaultProps = {
     i18n: {
-      changeLanguage: () => {}
+      changeLanguage: () => {},
+      language: 'zh'
     },
     title: '',
     type: 'play',
@@ -18,7 +19,8 @@ class Navigation extends React.Component {
 
   static propTypes = {
     i18n: PropTypes.shape({
-      changeLanguage: PropTypes.func
+      changeLanguage: PropTypes.func,
+      language: PropTypes.string
     }),
     title: PropTypes.string,
     type: PropTypes.string,
@@ -33,7 +35,6 @@ class Navigation extends React.Component {
     this.state = {
       visible: false,
       // true is zh, false is en
-      language: true
     };
   }
 
@@ -45,12 +46,19 @@ class Navigation extends React.Component {
   };
 
   switchLanguage = async () => {
-    const { language } = this.state;
+    // const { language } = this.state;
+    // const { i18n } = this.props;
+    // await i18n.changeLanguage(language ? 'en' : 'zh');
+    // this.setState({
+    //   language: !language
+    // });
     const { i18n } = this.props;
-    await i18n.changeLanguage(language ? 'en' : 'zh');
-    this.setState({
-      language: !language
-    });
+    const { language: rightLanguage } = i18n;
+    let nextLanguage = 'en';
+    if (rightLanguage === 'en') {
+      nextLanguage = 'zh';
+    }
+    i18n.changeLanguage(nextLanguage);
   }
 
   pageJump = () => {
@@ -96,6 +104,7 @@ class Navigation extends React.Component {
     }
     return (
       <NavBar
+        style={{ width: '100%', backgroundColor: 'transparent', color: 'white' }}
         mode="light"
         icon={<Icon type="left" />}
         onLeftClick={this.goBack}
