@@ -112,7 +112,7 @@ class Login extends React.PureComponent {
         </div>
 
         <div className="inputLine">
-          <ShowRotateBtn name={t('address')} />
+          <ShowRotateBtn name={t('addressAbbreviation')} />
           <List className="registerInputList">
             <InputItem
               className="inputItem"
@@ -132,24 +132,6 @@ class Login extends React.PureComponent {
             />
           </List>
         </div>
-
-        {/* <List>
-          <InputItem
-            value={address}
-            disabled
-          >
-            地址
-          </InputItem>
-          <InputItem
-            type="password"
-            placeholder="please input password"
-            onChange={this.onChange}
-            clear
-          >
-            密码
-          </InputItem>
-        </List> */}
-        {/* <Button onClick={this.handleLogin}>登录</Button> */}
         <RotateButton
           click={this.handleLogin}
           name={t('login')}

@@ -2,10 +2,11 @@ import React from 'react';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import store from 'store2';
+// import AElf from 'aelf-sdk';
+import { STORE_KEY } from '../../../../common/constants';
 import RotateButton from '../../components/RotateButton';
 import './index.less';
-
-const mnemonic = 'orange learn result add snack curtain double state expose bless also clarify';
 
 class Mnemonic extends React.Component {
   static defaultProps = {
@@ -23,7 +24,13 @@ class Mnemonic extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      mnemonic: ''
     };
+  }
+
+  componentDidMount() {
+    const { mnemonic } = store.session.get(STORE_KEY.WALLET_INFO);
+    this.setState({ mnemonic });
   }
 
   onDone = () => {
@@ -33,20 +40,15 @@ class Mnemonic extends React.Component {
 
   render() {
     const { t } = this.props;
+    const { mnemonic } = this.state;
     return (
       <>
-        {/* <Navigation title="备份助记词" type="mnemonic" /> */}
-        {/* <NoticeBar marqueeProps={{ loop: true, style: { padding: '0 7.5px' } }}>
-          助记词用于恢复身份或重置密码，请仔细抄写下助记词并妥善保管！
-        </NoticeBar> */}
         <div
           className="mnemonic"
         >
           <div className="titleBar">
             <span className="backupMnemonic">{`-${t('backupMnemonic')}-`}</span>
             <span className="mnemonicPrompt">{t('mnemonicPrompt')}</span>
-            {/* <span>{t('backupMnemonic')}</span>
-            <span>{t('mnemonicPrompt')}</span> */}
           </div>
 
           <div className="wordShow">
@@ -58,12 +60,6 @@ class Mnemonic extends React.Component {
             {mnemonic.split(' ').map(data => (
               <div key={data} className="word">{data}</div>
             ))}
-
-            {/* <div className="auxiliaries">
-              {mnemonic.split(' ').map(data => (
-                <div key={data} className="word">{data}</div>
-              ))}
-            </div> */}
 
           </div>
 

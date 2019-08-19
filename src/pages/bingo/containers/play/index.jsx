@@ -108,7 +108,6 @@ class BingoGame extends React.Component {
       ]))
       .then(([multiTokenContract, bingoGameContract]) => {
         Object.assign(this, { multiTokenContract, bingoGameContract });
-        this.getBalance();
         this.setState({ loaded: true }, this.getBalance);
       })
       .catch(err => {

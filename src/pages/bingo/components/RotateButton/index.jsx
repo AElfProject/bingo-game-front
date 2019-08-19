@@ -16,7 +16,7 @@ const RotateButton = props => {
       onKeyDown={() => {}}
       style={{ width, height: width }}
     >
-      <div style={language === 'en' ? { width: 'auto' } : nameStyle}>
+      <div style={language === 'en' ? { width: 'auto' } : { width: 'auto', ...nameStyle }}>
         {name}
       </div>
     </div>

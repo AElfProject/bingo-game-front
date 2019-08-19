@@ -93,11 +93,6 @@ class Register extends React.PureComponent {
   };
 
   register = () => {
-    // this.setState({
-    //   showModal: true
-    // });
-    // return;
-
     const { errors, values, isLoading } = this.state;
     let info = null;
     if (errors.nameError) {
