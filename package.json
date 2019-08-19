@@ -9,7 +9,8 @@
     "clean": "rimraf dist/*",
     "commit": "git-cz",
     "lint": "eslint --ext js,jsx src",
-    "dev": "npm run clean && cross-env NODE_ENV=development webpack-dev-server --progress --colors --display-chunks --watch --config ./build/webpack.dev.js"
+    "dev": "npm run clean && cross-env NODE_ENV=development webpack-dev-server --progress --colors --display-chunks --watch --config ./build/webpack.dev.js",
+    "test": "npm run clean && cross-env NODE_ENV=development webpack-dev-server --progress --colors --display-chunks --watch --config ./build/webpack.dev.js --dev-mode test"
   },
   "repository": {
     "type": "git",

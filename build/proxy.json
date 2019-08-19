@@ -1,11 +1,11 @@
 [
   {
-    "target": "http://10.64.26.169:8921",
+    "target": "http://192.168.199.115:7851",
     "context": [
-      "/api"
+      "/bingo"
     ],
     "headers": {
-      "Host": "test.aelf.io"
+      "x-csrf-token": "_masDbOnZ7z7aa2CIaHlK3wy"
     }
   }
 ]
