@@ -1,47 +1,100 @@
 import React from 'react';
+import { bindActionCreators, compose } from 'redux';
+import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
+import store from 'store2';
 import {
-  Flex, List, InputItem, WhiteSpace, Button, Toast, ActivityIndicator, Modal, Tabs
+  List, InputItem, Button, Toast, ActivityIndicator, Modal
 } from 'antd-mobile';
 import { If, Then, Else } from 'react-if';
 import AElf from 'aelf-sdk';
 import PropTypes from 'prop-types';
 import { localHttp } from '../../common/constants';
-import Navigation from './Navigation';
 import './index.less';
+import Record from './Record';
+import Navigation from '../../components/Navigation';
+import { STORE_KEY } from '../../../../common/constants';
+import { getTopRecords, getPersonalRecords, getRecordsResult } from '../../actions/recordinfo';
+import RotateButton from '../../components/RotateButton';
+import ModalContent from '../../components/ModalContent';
+
 
 class BingoGame extends React.Component {
   static defaultProps = {
     wallet: {
       address: 'csoxW4vTJNT9gdvyWS6W7UqEdkSo9pWyJqBoGSnUHXVnj4ykJ'
-    }
+    },
+    getTopRecords: () => {},
+    getPersonalRecords: () => {},
+    getRecordsResult: () => {},
+
+    recordInfo: {
+      personalRecords: {
+        list: []
+      },
+      topRecords: {
+        list: []
+      },
+    },
+    t: () => {}
   }
+
+  static propTypes = {
+    wallet: PropTypes.shape({
+      address: PropTypes.string.isRequired
+    }),
+    getTopRecords: PropTypes.func,
+    getPersonalRecords: PropTypes.func,
+    getRecordsResult: PropTypes.func,
+    recordInfo: PropTypes.shape({
+      personalRecords: PropTypes.shape({
+        list: PropTypes.array
+      }),
+      topRecords: PropTypes.shape({
+        list: PropTypes.array
+      })
+    }),
+    t: PropTypes.func
+  };
 
   constructor(props) {
     super(props);
     this.state = {
       // When the contract is awarded, the page can be displayed
-      loaded: false,
+      // loaded: false,
+      loaded: true,
       cards: 0,
       // Determine whether the input is correct
       inputHasError: false,
       errorMessage: 'Please enter a positive integer',
-      inputCards: 0,
+      inputCards: null,
       // When the bingo game starts to run, it becomes true
       opening: false,
+      // true is allRecords, false myRecords
+      records: true,
+      // result modal show
+      showModal: false,
+      resultInfo: '+ 0 Card'
     };
 
     this.multiTokenContract = null;
     this.bingoGameContract = null;
   }
 
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
+    console.log('play', this.props);
+
     const { sha256 } = AElf.utils;
-    const { wallet } = this.props;
+    const { wallet, getTopRecords: topRecords, getPersonalRecords: personalRecords } = this.props;
     const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
+
+    // get all records;
+    topRecords();
+    personalRecords({
+      address: store.get(STORE_KEY.ADDRESS),
+      pageNum: 1,
+      pageSize: 20
+    });
 
     aelf.chain.getChainStatus()
       .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
@@ -115,11 +168,11 @@ class BingoGame extends React.Component {
     const { cards } = this.state;
     let inputCards = 0;
     switch (value) {
-      case 100:
-        inputCards = 100;
+      case 1000:
+        inputCards = 1000;
         break;
-      case 500:
-        inputCards = 500;
+      case 2000:
+        inputCards = 2000;
         break;
       case 'Half':
         inputCards = parseInt(cards / 2, 10);
@@ -130,28 +183,54 @@ class BingoGame extends React.Component {
       default:
         inputCards = 0;
     }
-    this.setState({ inputCards, inputHasError: false });
+    if (cards - inputCards < 0) {
+      this.setState({
+        inputHasError: true,
+        errorMessage: 'You don\'t have so many cards',
+        inputCards
+      });
+    } else {
+      this.setState({ inputCards, inputHasError: false });
+    }
   };
 
-  bingoClick = () => {
-    const { inputHasError } = this.state;
+  playClick = () => {
+    const { inputHasError, inputCards } = this.state;
 
-    if (inputHasError) {
+    if (inputHasError || !inputCards) {
       const { errorMessage } = this.state;
       Toast.info(errorMessage);
     } else {
       this.setState({
         opening: true
       });
-      const { inputCards } = this.state;
+
+      // local chain contract start
       const { bingoGameContract } = this;
+
 
       bingoGameContract.Play({ value: inputCards })
         .then(result => bingoGameContract.Bingo(result.TransactionId))
         .then(
           this.getBalance
         )
-        .then(difference => {
+        .then(async difference => {
+          const {
+            getTopRecords: topRecords, getRecordsResult: recordsResult, getPersonalRecords: personalRecords
+          } = this.props;
+
+          await recordsResult({
+            result: difference,
+            address: store.get(STORE_KEY.ADDRESS)
+          });
+
+          personalRecords({
+            address: store.get(STORE_KEY.ADDRESS),
+            pageNum: 1,
+            pageSize: 20
+          });
+          topRecords();
+
           let info = null;
           if (difference >= 0) {
             info = `+ ${difference} CARD`;
@@ -159,20 +238,56 @@ class BingoGame extends React.Component {
             info = `- ${-difference} CARD`;
           }
 
-          const { cards } = this.state;
-          Modal.alert(info, `当前账户余额：${cards} CARD`);
+          // const { cards } = this.state;
+          // Modal.alert(info, `当前账户余额：${cards} CARD`);
           this.setState({
-            opening: false
+            opening: false,
+            showModal: true,
+            resultInfo: info
           });
         })
         .catch(err => {
           this.setState({
-            opening: false
+            opening: false,
           });
           console.log(err);
         });
+      // local chain contract end
     }
   };
+
+  tabChange = tab => {
+    const anchorElement = document.querySelector('.record');
+    if (anchorElement) {
+      anchorElement.scrollIntoView();
+    }
+
+    const { getTopRecords: topRecords, getPersonalRecords: personalRecords } = this.props;
+    let records = true;
+    switch (tab) {
+      case 'allRecords':
+        topRecords();
+        records = true;
+        break;
+      case 'myRecords':
+        personalRecords({
+          address: store.get(STORE_KEY.ADDRESS),
+          pageNum: 1,
+          pageSize: 20
+        });
+        records = false;
+        break;
+      default:
+        break;
+    }
+    this.setState({ records });
+  }
+
+  modalConfirm = () => {
+    this.setState({
+      showModal: false
+    });
+  }
 
   render() {
     const {
@@ -180,25 +295,47 @@ class BingoGame extends React.Component {
       loaded,
       inputCards,
       inputHasError,
-      opening
+      opening,
+      records,
+      showModal,
+      resultInfo
     } = this.state;
+
+    const {
+      recordInfo: {
+        personalRecords: {
+          list: personalData
+        },
+        topRecords: {
+          list: topData
+        },
+      },
+      t
+    } = this.props;
     return (
       <>
-        <Navigation />
         <If condition={loaded}>
           <Then>
-            <Flex justify="center" direction="column">
-              <h1>BingoGame</h1>
+            <div className="play">
+
+              <Navigation title="Bingo" type="play" />
+              <div>
+                <span className="title">Bingo</span>
+                <span className="title">Game</span>
+              </div>
               <h2>
-              Your CARD: $
-                {`${cards} `}
+              Your CARD：
+                <span>
+                  {`${cards} `}
+                </span>
               CARD
               </h2>
-              <List id="inputList">
+              <List className="inputList">
                 <InputItem
+                  className="inputItem"
                   type="money"
                   value={inputCards}
-                  placeholder="Subscription amount"
+                  // placeholder="Subscription amount"
                   clear
                   autoAdjustHeight
                   onChange={this.cardChange}
@@ -208,81 +345,92 @@ class BingoGame extends React.Component {
                 />
               </List>
 
-              <WhiteSpace size="lg" />
-
-              <Flex justify="between">
-                <Button
-                  size="small"
-                  onClick={() => {
-                    this.setNumber(100);
-                  }}
-                  disabled={opening}
-                >
-                100
-                </Button>
-                <Button
-                  size="small"
-                  disabled={opening}
-                  onClick={() => this.setNumber(500)}
-                >
-                500
-                </Button>
-                <Button
-                  size="small"
-                  disabled={opening}
-                  onClick={() => this.setNumber('Half')}
-                >
-                Half
-                </Button>
-                <Button
-                  size="small"
-                  disabled={opening}
-                  onClick={() => this.setNumber('All-In')}
-                >
-                All-in
-                </Button>
-              </Flex>
-
-              <WhiteSpace size="lg" />
+              <div className="whiteColor">
+                ————
+                {t('batAmount')}
+                ————
+              </div>
 
               <Button
-                loading={opening}
-                disabled={opening || inputHasError}
-                onClick={this.bingoClick}
-                className="btnStyle"
+                className="btn"
+                onClick={() => {
+                  this.setNumber(1000);
+                }}
+                disabled={opening}
               >
-                Bingo
+              1000
+              </Button>
+              <Button
+                className="btn"
+                disabled={opening}
+                onClick={() => this.setNumber(2000)}
+              >
+              2000
+              </Button>
+              <Button
+                className="btn"
+                disabled={opening}
+                onClick={() => this.setNumber('Half')}
+              >
+              Half
+              </Button>
+              <Button
+                className="btn"
+                disabled={opening}
+                onClick={() => this.setNumber('All-In')}
+              >
+              All-in
               </Button>
 
-              <WhiteSpace size="lg" />
+              <RotateButton
+                name="PLAY"
+                click={this.playClick}
+              />
 
-              <Tabs
-                tabs={[
-                  { title: '所有记录', sub: '1' },
-                  { title: '我的记录', sub: '2' },
-                ]}
-                initialPage={1}
-                onChange={(tab, index) => { console.log('onChange', index, tab); }}
-                onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
-              >
-                <div>所有记录</div>
-                <div>我的记录</div>
-              </Tabs>
-            </Flex>
+              <div className="recordFrame">
+                <Button onClick={() => this.tabChange('allRecords')} className="recordBtn">{t('allRecords')}</Button>
+                <Button onClick={() => this.tabChange('myRecords')} className="recordBtn">{t('myRecords')}</Button>
+              </div>
+
+            </div>
+            <If condition={records}>
+              <Then><Record type="allRecords" info={topData} /></Then>
+              <Else><Record type="myRecords" info={personalData} /></Else>
+            </If>
+
+            <Modal
+              visible={showModal}
+              transparent
+              maskClosable
+              className="bingo-play-modal"
+            >
+              <ModalContent confirm={this.modalConfirm} btnName={t('resultConfirm')}>
+                <>
+                  <div className="play-info-1">{resultInfo}</div>
+                  <div className="play-info-2">{t('accountBalance')}</div>
+                  <div className="play-info-3">{`${cards} CARD`}</div>
+                </>
+              </ModalContent>
+            </Modal>
           </Then>
 
           <Else><ActivityIndicator size="large" /></Else>
         </If>
-
       </>
     );
   }
 }
 
-BingoGame.propTypes = {
-  wallet: PropTypes.shape({
-    address: PropTypes.string.isRequired
-  })
-};
+const mapStateToProps = state => ({
+  recordInfo: state.recordInfo
+});
+const mapDispatchToProps = dispatch => bindActionCreators({
+  getTopRecords, getPersonalRecords, getRecordsResult
+}, dispatch);
 
-export default BingoGame;
+const wrapper = compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withTranslation()
+);
+
+export default wrapper(BingoGame);

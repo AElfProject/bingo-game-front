@@ -25,6 +25,9 @@ const baseConfig = {
       path.resolve(ROOT, 'src'),
       path.resolve(ROOT, 'node_modules')
     ],
+    alias: {
+      'aelf-sdk': 'aelf-sdk/dist/aelf.umd.js'
+    },
     extensions: ['.jsx', '.js']
   },
   module: {

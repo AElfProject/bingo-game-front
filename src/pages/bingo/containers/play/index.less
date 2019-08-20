@@ -1,7 +1,193 @@
-#inputList {
-  width: 200px;
+@frameWidth: 200px;
+@marginTop: 10px;
+@btnColor: #2ffffe;
+@fontSize: 20px;
+
+.play {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 100vh;
 }
 
-.btnStyle {
-  padding: 0 10px;
+.inputList {
+  opacity: 0.6;
+
+  :first-child {
+    border-radius: 5px;
+  }
+
+  .inputItem {
+    width: @frameWidth;
+    height: 40px;
+    background-color: @btnColor;
+  }
+}
+
+.title {
+  font-size: 65px;
+  background: linear-gradient(
+    to right,
+    rgb(49, 255, 254),
+    rgb(19, 128, 127) /*rgb(190, 240, 239)*/
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+.whiteColor {
+  color: white;
+}
+
+.marginTop {
+  margin-top: @marginTop;
+}
+
+h2 {
+  .whiteColor;
+  > span {
+    color: rgb(255, 241, 127);
+  }
+}
+
+@btnHeight: 40px;
+.btn {
+  width: @frameWidth+15px;
+  font-size: 18px;
+  height: @btnHeight;
+  line-height: @btnHeight;
+  background-color: @btnColor;
+}
+
+.recordFrame {
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+  margin-bottom: @marginTop;
+
+  .recordBtn {
+    width: 40%;
+    height: @btnHeight;
+    line-height: @btnHeight;
+    background-color: @btnColor;
+  }
+}
+
+// Record.jsx
+@recordWidth: 80%;
+@recordHeight: calc(100vh - 60px);
+.record {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: @recordHeight;
+}
+@titleHeight: 20px;
+.recordTitle {
+  .whiteColor;
+  height: @titleHeight;
+  width: @recordWidth;
+  margin-top: @marginTop;
+}
+
+@showFrameWidth: 25px;
+.showFrame {
+  width: @showFrameWidth;
+  height: @showFrameWidth;
+  background-size: cover;
+  z-index: 1;
+}
+
+.recordShow {
+  .whiteColor;
+  height: calc(@recordHeight - @titleHeight - 2 * @marginTop);
+  width: @recordWidth;
+  margin-top: @marginTop;
+  padding: @marginTop 0 @marginTop*2;
+
+  overflow: scroll;
+
+  position: relative;
+  .record-tl {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: url(../../../../static/record-tl.png) no-repeat;
+    .showFrame;
+  }
+  .record-tr {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: url(../../../../static/record-tr.png) no-repeat;
+    .showFrame;
+  }
+  .record-bl {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    background: url(../../../../static/record-bl.png) no-repeat;
+    .showFrame;
+  }
+  .record-br {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    background: url(../../../../static/record-br.png) no-repeat;
+    .showFrame;
+  }
+}
+
+.allRecords {
+  display: flex;
+  align-items: center;
+  margin-top: @marginTop;
+}
+
+.allRecords > div {
+  display: inline-block;
+  width: 33.333%;
+  text-align: center;
+}
+
+.allRecords > :first-child {
+  word-wrap: break-word;
+}
+
+.myRecords {
+  margin-top: @marginTop;
+  > div {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+  }
+}
+
+.bingo-play-modal {
+  > .am-modal-content {
+    padding: 0;
+
+    > .am-modal-body {
+      padding: 0;
+    }
+  }
+
+  .play-info- {
+    &1 {
+      margin-top: 60px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    &2 {
+      margin-top: 78px;
+    }
+    &3 {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
 }

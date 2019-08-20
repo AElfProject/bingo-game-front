@@ -1,0 +1,102 @@
+@spaceWord: 20px;
+@navHeight: 45px;
+
+.mnemonic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 100vh; // calc(100% - @navHeight);
+}
+
+.titleBar {
+  width: 370px;
+  height: 100px;
+  background: url(../../../../static/titleBg.png) no-repeat;
+  background-size: cover;
+
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  .backupMnemonic {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .mnemonicPrompt {
+    margin: 0 10px 15px 15px;
+  }
+}
+
+@showFrameWidth: 25px;
+.showFrame {
+  width: @showFrameWidth;
+  height: @showFrameWidth;
+  background-size: cover;
+}
+
+.wordShow {
+  color: white;
+  width: 80%;
+  box-sizing: border-box;
+  padding: 20px;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  .word {
+    padding: 4px;
+    margin-bottom: @spaceWord;
+    margin-left: @spaceWord / 2;
+  }
+
+  position: relative;
+  .record-tl {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: url(../../../../static/record-tl.png) no-repeat;
+    .showFrame;
+  }
+  .record-tr {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: url(../../../../static/record-tr.png) no-repeat;
+    .showFrame;
+  }
+  .record-bl {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    background: url(../../../../static/record-bl.png) no-repeat;
+    .showFrame;
+  }
+  .record-br {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    background: url(../../../../static/record-br.png) no-repeat;
+    .showFrame;
+  }
+}
+
+.auxiliaries {
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  background-color: #fff;
+  margin-top: 10px;
+  padding-top: @spaceWord;
+}
+
+.auxiliaries > div {
+  background-color: #eeeeee;
+  padding: 4px;
+  margin-bottom: @spaceWord;
+}
