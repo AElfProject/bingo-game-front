@@ -38,6 +38,7 @@
     "lodash-decorators": "^6.0.1",
     "memoize-one": "^5.0.5",
     "prop-types": "^15.7.2",
+    "qrcode.react": "^0.9.3",
     "query-string": "5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

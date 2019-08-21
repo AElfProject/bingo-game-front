@@ -24,7 +24,7 @@ import { API_PATH, STORE_KEY, REG_COLLECTION } from '../../../../common/constant
 import RotateButton from '../../components/RotateButton';
 import ShowRotateBtn from '../../components/ShowRotateBtn';
 import ModalContent from '../../components/ModalContent';
-
+import { localHttp } from '../../common/constants';
 import './index.less';
 
 class Register extends React.PureComponent {
@@ -42,7 +42,7 @@ class Register extends React.PureComponent {
     i18n: PropTypes.shape({
       changeLanguage: PropTypes.func,
       language: PropTypes.string
-    })
+    }),
   };
 
   static defaultProps = {
@@ -119,36 +119,49 @@ class Register extends React.PureComponent {
       isLoading: true
     });
     const wallet = AElf.wallet.createNewWallet();
+    store.session.set(STORE_KEY.WALLET_INFO, wallet);
     const { address } = wallet;
-    request(API_PATH.REGISTER, {
-      name: values.name,
-      address: wallet.address
-    }).then(res => {
-      if (+res.code === 0) {
-        const { count } = res.data;
-        saver({
-          wallet,
+
+    // contract initialization
+    const { sha256 } = AElf.utils;
+    const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
+    aelf.chain.getChainStatus()
+      .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
+      .then(zeroC => zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract')))
+      .then(bingoAddress => aelf.chain.contractAt(bingoAddress, wallet))
+      .then(bingoGameContract => bingoGameContract.Register())
+      .then(() => {
+        request(API_PATH.REGISTER, {
           name: values.name,
-          count
+          address: wallet.address
+        }).then(res => {
+          if (+res.code === 0) {
+            const { count } = res.data;
+            saver({
+              wallet,
+              name: values.name,
+              count
+            });
+            const keyStore = AElf.wallet.keyStore.getKeystore(wallet, values.password, {
+              cipher: 'aes-256-cbc'
+            });
+            store(STORE_KEY.KEY_STORE, keyStore);
+            store(STORE_KEY.ADDRESS, address);
+            this.setState({
+              showModal: true
+            });
+          } else {
+            throw new Error(res.msg);
+          }
         });
-        const keyStore = AElf.wallet.keyStore.getKeystore(wallet, values.password, {
-          cipher: 'aes-256-cbc'
-        });
-        store(STORE_KEY.KEY_STORE, keyStore);
-        store(STORE_KEY.ADDRESS, address);
+      })
+      .catch(err => {
+        console.log(err);
         this.setState({
-          showModal: true
+          isLoading: false
         });
-      } else {
-        throw new Error(res.msg);
-      }
-    }).catch(e => {
-      console.log(e);
-      this.setState({
-        isLoading: false
+        Modal.alert(t('inValidTitle'), t('inValidRegister'));
       });
-      Modal.alert(t('inValidTitle'), t('inValidRegister'));
-    });
   };
 
   nameInput = value => {
@@ -289,7 +302,6 @@ class Register extends React.PureComponent {
                 error={errors.nameError}
                 onChange={this.nameInput}
                 value={values.name}
-                // placeholder={t('nickName')}
                 onErrorClick={() => this.onErrorClick('nickName')}
               />
             </List>
@@ -304,7 +316,6 @@ class Register extends React.PureComponent {
                 error={errors.passwordError}
                 onChange={this.passwordInput}
                 value={values.password}
-                // placeholder={t('password')}
                 onErrorClick={() => this.onErrorClick('password')}
               />
             </List>
@@ -319,7 +330,6 @@ class Register extends React.PureComponent {
                 error={errors.confirmPasswordError}
                 onChange={this.confirmPasswordInput}
                 value={values.confirmPassword}
-                // placeholder={t('confirmPassword')}
                 onErrorClick={() => this.onErrorClick('confirmPassword')}
               />
             </List>
@@ -336,7 +346,7 @@ class Register extends React.PureComponent {
           maskClosable
           className="bingo-register-modal"
         >
-          <ModalContent confirm={this.onConfirm} title="true">
+          <ModalContent confirm={this.onConfirm} title>
             <>
               <div>
                 {t('registerSuccessInfoFir')}

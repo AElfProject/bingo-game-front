@@ -29,11 +29,7 @@
 
 .title {
   font-size: 65px;
-  background: linear-gradient(
-    to right,
-    rgb(49, 255, 254),
-    rgb(19, 128, 127) /*rgb(190, 240, 239)*/
-  );
+  background: linear-gradient(to right, rgb(49, 255, 254), rgb(19, 128, 127));
   background-clip: text;
   color: transparent;
 }
@@ -66,7 +62,7 @@ h2 {
   display: flex;
   justify-content: space-around;
   width: 80%;
-  margin-bottom: @marginTop;
+  margin: @marginTop 0;
 
   .recordBtn {
     width: 40%;
@@ -74,6 +70,12 @@ h2 {
     line-height: @btnHeight;
     background-color: @btnColor;
   }
+}
+
+.playTips {
+  .whiteColor;
+  width: 80%;
+  text-align: center;
 }
 
 // Record.jsx
@@ -91,6 +93,7 @@ h2 {
   height: @titleHeight;
   width: @recordWidth;
   margin-top: @marginTop;
+  padding: 0 @marginTop*1.5;
 }
 
 @showFrameWidth: 25px;
@@ -105,10 +108,10 @@ h2 {
   .whiteColor;
   height: calc(@recordHeight - @titleHeight - 2 * @marginTop);
   width: @recordWidth;
+  height: 100%;
   margin-top: @marginTop;
-  padding: @marginTop 0 @marginTop*2;
-
-  overflow: scroll;
+  box-sizing: border-box;
+  padding: @marginTop @marginTop*1.5 @marginTop*2;
 
   position: relative;
   .record-tl {
@@ -139,6 +142,16 @@ h2 {
     background: url(../../../../static/record-br.png) no-repeat;
     .showFrame;
   }
+
+  .recordContent {
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+
+    > .am-pull-to-refresh-content-wrapper {
+      height: 100%;
+    }
+  }
 }
 
 .allRecords {
@@ -158,7 +171,10 @@ h2 {
 }
 
 .myRecords {
-  margin-top: @marginTop;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+
   > div {
     display: inline-block;
     width: 50%;

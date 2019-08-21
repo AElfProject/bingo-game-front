@@ -14,7 +14,7 @@ import './index.less';
 import Record from './Record';
 import Navigation from '../../components/Navigation';
 import { STORE_KEY } from '../../../../common/constants';
-import { getTopRecords, getPersonalRecords, getRecordsResult } from '../../actions/recordinfo';
+import { getTopRecords, getPersonalRecords, saveRecordsResult } from '../../actions/recordinfo';
 import RotateButton from '../../components/RotateButton';
 import ModalContent from '../../components/ModalContent';
 
@@ -22,11 +22,11 @@ import ModalContent from '../../components/ModalContent';
 class BingoGame extends React.Component {
   static defaultProps = {
     wallet: {
-      address: 'csoxW4vTJNT9gdvyWS6W7UqEdkSo9pWyJqBoGSnUHXVnj4ykJ'
+      address: ''
     },
     getTopRecords: () => {},
     getPersonalRecords: () => {},
-    getRecordsResult: () => {},
+    saveRecordsResult: () => {},
 
     recordInfo: {
       personalRecords: {
@@ -41,11 +41,11 @@ class BingoGame extends React.Component {
 
   static propTypes = {
     wallet: PropTypes.shape({
-      address: PropTypes.string.isRequired
+      address: PropTypes.string
     }),
     getTopRecords: PropTypes.func,
     getPersonalRecords: PropTypes.func,
-    getRecordsResult: PropTypes.func,
+    saveRecordsResult: PropTypes.func,
     recordInfo: PropTypes.shape({
       personalRecords: PropTypes.shape({
         list: PropTypes.array
@@ -54,7 +54,7 @@ class BingoGame extends React.Component {
         list: PropTypes.array
       })
     }),
-    t: PropTypes.func
+    t: PropTypes.func,
   };
 
   constructor(props) {
@@ -82,12 +82,11 @@ class BingoGame extends React.Component {
   }
 
   componentDidMount() {
-    console.log('play', this.props);
+    console.log('playProps', this.props);
 
-    const { sha256 } = AElf.utils;
-    const { wallet, getTopRecords: topRecords, getPersonalRecords: personalRecords } = this.props;
-    const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
-
+    const { getTopRecords: topRecords, getPersonalRecords: personalRecords } = this.props;
+    const { mnemonic } = store.session.get(STORE_KEY.WALLET_INFO);
+    const wallet = AElf.wallet.getWalletByMnemonic(mnemonic);
     // get all records;
     topRecords();
     personalRecords({
@@ -96,6 +95,9 @@ class BingoGame extends React.Component {
       pageSize: 20
     });
 
+    // remove to  register
+    const { sha256 } = AElf.utils;
+    const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
     aelf.chain.getChainStatus()
       .then(res => aelf.chain.contractAt(res.GenesisContractAddress, wallet))
       .then(zeroC => Promise.all([
@@ -108,6 +110,8 @@ class BingoGame extends React.Component {
       ]))
       .then(([multiTokenContract, bingoGameContract]) => {
         Object.assign(this, { multiTokenContract, bingoGameContract });
+        // bug in bingo-game chain, first getBalance get result.balance = 0
+        this.getBalance();
         this.setState({ loaded: true }, this.getBalance);
       })
       .catch(err => {
@@ -116,10 +120,10 @@ class BingoGame extends React.Component {
   }
 
   getBalance = () => {
-    const { wallet } = this.props;
+    const { address } = store.session.get(STORE_KEY.WALLET_INFO);
     const payload = {
       symbol: 'CARD',
-      owner: wallet.address
+      owner: address
     };
     return this.multiTokenContract.GetBalance.call(payload)
       .then(result => {
@@ -136,16 +140,17 @@ class BingoGame extends React.Component {
 
   cardChange = inputCards => {
     const { cards } = this.state;
+    const { t } = this.props;
     const reg = /^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/;
     if (!reg.test(inputCards)) {
       this.setState({
         inputHasError: true,
-        errorMessage: 'Please enter the amount in the correct format'
+        errorMessage: t('inputTips')
       });
     } else if (cards - inputCards < 0) {
       this.setState({
         inputHasError: true,
-        errorMessage: 'You don\'t have so many cards'
+        errorMessage: t('excessQuantity')
       });
     } else {
       this.setState({
@@ -166,6 +171,7 @@ class BingoGame extends React.Component {
 
   setNumber = value => {
     const { cards } = this.state;
+    const { t } = this.props;
     let inputCards = 0;
     switch (value) {
       case 1000:
@@ -186,7 +192,7 @@ class BingoGame extends React.Component {
     if (cards - inputCards < 0) {
       this.setState({
         inputHasError: true,
-        errorMessage: 'You don\'t have so many cards',
+        errorMessage: t('excessQuantity'),
         inputCards
       });
     } else {
@@ -216,7 +222,7 @@ class BingoGame extends React.Component {
         )
         .then(async difference => {
           const {
-            getTopRecords: topRecords, getRecordsResult: recordsResult, getPersonalRecords: personalRecords
+            getTopRecords: topRecords, saveRecordsResult: recordsResult, getPersonalRecords: personalRecords
           } = this.props;
 
           await recordsResult({
@@ -238,8 +244,6 @@ class BingoGame extends React.Component {
             info = `- ${-difference} CARD`;
           }
 
-          // const { cards } = this.state;
-          // Modal.alert(info, `当前账户余额：${cards} CARD`);
           this.setState({
             opening: false,
             showModal: true,
@@ -310,7 +314,9 @@ class BingoGame extends React.Component {
           list: topData
         },
       },
-      t
+      t,
+      getTopRecords: topRecords,
+      getPersonalRecords: personalRecords
     } = this.props;
     return (
       <>
@@ -387,6 +393,8 @@ class BingoGame extends React.Component {
                 click={this.playClick}
               />
 
+              <div className="playTips">{t('playTips')}</div>
+
               <div className="recordFrame">
                 <Button onClick={() => this.tabChange('allRecords')} className="recordBtn">{t('allRecords')}</Button>
                 <Button onClick={() => this.tabChange('myRecords')} className="recordBtn">{t('myRecords')}</Button>
@@ -394,8 +402,18 @@ class BingoGame extends React.Component {
 
             </div>
             <If condition={records}>
-              <Then><Record type="allRecords" info={topData} /></Then>
-              <Else><Record type="myRecords" info={personalData} /></Else>
+              <Then><Record type="allRecords" info={topData} refresh={() => topRecords()} /></Then>
+              <Else>
+                <Record
+                  type="myRecords"
+                  info={personalData}
+                  refresh={() => personalRecords({
+                    address: store.get(STORE_KEY.ADDRESS),
+                    pageNum: 1,
+                    pageSize: 20
+                  })}
+                />
+              </Else>
             </If>
 
             <Modal
@@ -422,10 +440,10 @@ class BingoGame extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  recordInfo: state.recordInfo
+  recordInfo: state.recordInfo,
 });
 const mapDispatchToProps = dispatch => bindActionCreators({
-  getTopRecords, getPersonalRecords, getRecordsResult
+  getTopRecords, getPersonalRecords, saveRecordsResult
 }, dispatch);
 
 const wrapper = compose(

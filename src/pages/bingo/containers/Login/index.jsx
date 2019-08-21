@@ -77,7 +77,7 @@ class Login extends React.PureComponent {
     // todo: get password from input
     try {
       const { password } = this.state;
-      this.getWalletFromKeyStore(password); // '123123123'
+      this.getWalletFromKeyStore(password);
     } catch (e) {
       console.log('trycatch', e);
       if (e.error === 200001) {

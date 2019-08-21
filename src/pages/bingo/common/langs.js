@@ -34,13 +34,25 @@ export const resources = {
       player: 'player',
       balance: 'balance',
       bets: 'bets',
+      time: 'time',
       done: 'Done',
       backupMnemonic: 'Backup mnemonic',
       mnemonicPrompt: 'Mnemonics are used to restore identity and password, please keep it safe',
       startGame: 'Start',
       login: 'login',
       accountBalance: 'Current account balance',
-      resultConfirm: 'OK'
+      resultConfirm: 'OK',
+      playTips: 'Betting no less than 3 times, you can participate in the ranking',
+      result: 'result',
+      backupQRcode: 'Backup QR code',
+      qrcodePrompt: 'QR code is used to restore identity and password, please keep it safe',
+      inputTips: 'Please enter the amount in the correct format',
+      excessQuantity: 'You don\'t have so many cards',
+      exportQRcode: 'Export QR code',
+      game: 'Game',
+      pullRefresh: 'Pull down can refresh',
+      refreshImmediately: 'Release and refresh immediately',
+      completeRefresh: 'Complete refresh'
     }
   },
   zh: {
@@ -73,13 +85,26 @@ export const resources = {
       player: '玩家',
       balance: '余额',
       bets: '投注次数',
+      time: '时间',
       done: '完成',
       backupMnemonic: '备份助记词',
       mnemonicPrompt: '助记词用于恢复身份和密码,请妥善保管',
       startGame: '开始游戏',
       login: '登录',
       accountBalance: '当前账户余额',
-      resultConfirm: '确认'
+      resultConfirm: '确认',
+      playTips: '投注次数不少于3次，即可参与排名',
+      result: '结果',
+      backupQRcode: '备份二维码',
+      qrcodePrompt: '二维码用于恢复身份,请妥善保管',
+      inputTips: '请输入正确格式的数字',
+      excessQuantity: '你没有这么多的Card',
+      exportQRcode: '导出二维码',
+      game: '游戏',
+      pullRefresh: '下拉可以刷新',
+      refreshImmediately: '松开立即刷新',
+      completeRefresh: '完成刷新',
+      scanRegister: '未在本地检测到您的地址信息，若您已申请过游戏账号，可点击此处扫码恢复账号信息！'
     }
   }
 };

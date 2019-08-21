@@ -5,7 +5,7 @@
 import { BASE_INFO } from '../actions/base';
 
 const initialState = {
-  hasRegistered: false, // have registered or not
+  hasRegistered: false,
   isLogin: false,
   wallet: {},
   username: '',
