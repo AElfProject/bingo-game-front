@@ -2,3 +2,11 @@ body {
   color: blue;
   font-size: 16px;
 }
+
+#app #background .am-list-body {
+  // Remove the border of the antd Input
+  &:after,
+  &:before {
+    display: none;
+  }
+}

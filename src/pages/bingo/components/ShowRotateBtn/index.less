@@ -8,6 +8,7 @@
 }
 
 @fontSize: 20px;
+@width: 80px;
 .ShowBtnConfirm {
   display: flex;
   justify-content: center;
@@ -15,12 +16,13 @@
   color: #2ffffe;
   font-size: @fontSize;
   font-weight: bold;
-
+  width: @width;
+  height: @width;
   position: relative;
   overflow: hidden;
 
   > span {
-    width: 2 * @fontSize;
+    width: 2 * @fontSize + 1px;
   }
 
   :before {

@@ -52,7 +52,11 @@ export const resources = {
       game: 'Game',
       pullRefresh: 'Pull down can refresh',
       refreshImmediately: 'Release and refresh immediately',
-      completeRefresh: 'Complete refresh'
+      completeRefresh: 'Complete refresh',
+      scanRegister1:
+        'Your address information has not been detected locally. If you have already registered, you can ',
+      scanRegister2: 'click here',
+      scanRegister3: 'to scan the QRcode to restore your account information!'
     }
   },
   zh: {
@@ -104,7 +108,9 @@ export const resources = {
       pullRefresh: '下拉可以刷新',
       refreshImmediately: '松开立即刷新',
       completeRefresh: '完成刷新',
-      scanRegister: '未在本地检测到您的地址信息，若您已申请过游戏账号，可点击此处扫码恢复账号信息！'
+      scanRegister1: '未在本地检测到您的地址信息，若您已申请过游戏账号，可',
+      scanRegister2: '点击此处',
+      scanRegister3: '扫码恢复账号信息'
     }
   }
 };

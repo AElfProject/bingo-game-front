@@ -22,14 +22,7 @@ class QRcodeExport extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      keyStore: {}
-    };
-  }
-
-  componentDidMount() {
-    const keyStore = store.get(STORE_KEY.KEY_STORE);
-    this.setState({ keyStore });
+    this.keyStore = store.get(STORE_KEY.KEY_STORE);
   }
 
   onDone = () => {
@@ -39,7 +32,6 @@ class QRcodeExport extends React.Component {
 
   render() {
     const { t } = this.props;
-    const { keyStore } = this.state;
     return (
       <>
         <InterfaceForQRAndMne
@@ -50,7 +42,7 @@ class QRcodeExport extends React.Component {
           center
         >
 
-          <QRCode value={JSON.stringify(keyStore)} size={250} />
+          <QRCode value={JSON.stringify(this.keyStore)} size={250} />
 
         </InterfaceForQRAndMne>
       </>
