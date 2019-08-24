@@ -14,7 +14,8 @@ class Navigation extends React.Component {
     },
     title: '',
     type: 'play',
-    history: {}
+    history: {},
+    t: () => {}
   }
 
   static propTypes = {
@@ -28,30 +29,23 @@ class Navigation extends React.Component {
       goBack: PropTypes.func,
       push: PropTypes.func,
     }),
+    t: PropTypes.func
   }
 
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
-      // true is zh, false is en
     };
   }
 
   handleVisibleChange = visible => {
-    console.log('visible', visible);
     this.setState({
       visible,
     });
   };
 
   switchLanguage = async () => {
-    // const { language } = this.state;
-    // const { i18n } = this.props;
-    // await i18n.changeLanguage(language ? 'en' : 'zh');
-    // this.setState({
-    //   language: !language
-    // });
     const { i18n } = this.props;
     const { language: rightLanguage } = i18n;
     let nextLanguage = 'en';
@@ -73,12 +67,16 @@ class Navigation extends React.Component {
   }
 
   onSelect = opt => {
+    const { history } = this.props;
     switch (opt.props.value) {
       case 'language':
         this.switchLanguage();
         break;
       case 'auxiliaries':
         this.pageJump();
+        break;
+      case 'QRcode':
+        history.push('QRcode');
         break;
       default:
         break;
@@ -95,12 +93,12 @@ class Navigation extends React.Component {
 
   render() {
     const { visible } = this.state;
-    const { title, type } = this.props;
+    const { title, type, t } = this.props;
     let item = null;
     if (type === 'play') {
-      item = '备份助记词';
+      item = t('backupMnemonic');
     } else if (type === 'mnemonic') {
-      item = '游戏';
+      item = t('game');
     }
     return (
       <NavBar
@@ -115,12 +113,12 @@ class Navigation extends React.Component {
               overflow: { adjustY: 0, adjustX: 0 },
               offset: [0, 0],
             }}
-            // onVisibleChange={this.handleVisibleChange}
             onSelect={this.onSelect}
             mask="true"
             overlay={[
               (<Item key="0" value="auxiliaries">{item}</Item>),
-              (<Item key="1" value="language"><span style={{ marginRight: 5 }}>中/EN</span></Item>)
+              (<Item key="1" value="QRcode"><span style={{ marginRight: 5 }}>{t('exportQRcode')}</span></Item>),
+              (<Item key="2" value="language"><span style={{ marginRight: 5 }}>中/EN</span></Item>)
             ]}
           >
             <Icon key="1" type="ellipsis" />

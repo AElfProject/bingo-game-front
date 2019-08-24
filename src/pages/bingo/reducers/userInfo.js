@@ -19,7 +19,6 @@ const initialState = {
   totalNum: 0
 };
 
-// action类型，可改为enum类型
 export const userInfo = (state = initialState, { type, payload }) => {
   switch (type) {
     case SERVICE_FETCH_LIST.SERVICE_FETCH_LIST_REQUEST:

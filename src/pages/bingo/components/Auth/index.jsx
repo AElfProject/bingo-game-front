@@ -34,7 +34,7 @@ const AuthRouter = props => {
     if (hasAccount && !isLoginWithSession && path !== '/login') {
       return <Redirect to="/login" />;
     }
-    if (hasAccount && isLoginWithSession && (path === '/register' || path === '/login')) {
+    if (hasAccount && isLoginWithSession && (path === '/register' || path === '/login' || path === '/')) {
       return <Redirect to="/play" />;
     }
     return <Component {...innerProps} {...rest} />;

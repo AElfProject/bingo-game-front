@@ -6,13 +6,22 @@ const RotateButton = props => {
   const {
     name, width, fontSize, tabIndex
   } = props;
+  const style = {};
+  if (width) {
+    Object.assign(style, {
+      width, height: width,
+    });
+  }
+  if (fontSize) {
+    style.fontSize = fontSize;
+  }
   return (
     <div
       className="ShowBtnConfirm"
       role="button"
       tabIndex={tabIndex}
       onKeyDown={() => {}}
-      style={{ width, height: width, fontSize }}
+      style={style}
     >
       <span>
         {name}
@@ -23,14 +32,13 @@ const RotateButton = props => {
 
 
 RotateButton.defaultProps = {
-  name: '',
-  width: '80px',
+  width: '',
   tabIndex: 0,
-  fontSize: '20px',
+  fontSize: '',
 };
 
 RotateButton.propTypes = {
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   width: PropTypes.string,
   tabIndex: PropTypes.number,
   fontSize: PropTypes.string,

@@ -13,7 +13,7 @@ export const getTopRecords = params => async dispatch => {
     payload: params
   });
   try {
-    const data = await request(API_PATH.TOP_RECORDS, params);
+    const data = await request(API_PATH.TOP_RECORDS, params, { method: 'GET' });
     dispatch({
       type: SERVICE_TOP_RECORDS.SERVICE_TOP_RECORDS_SUCCESS,
       payload: data
@@ -39,7 +39,7 @@ export const getPersonalRecords = params => async dispatch => {
     payload: params
   });
   try {
-    const data = await request(API_PATH.PERSONAL_RECORDS, params);
+    const data = await request(API_PATH.PERSONAL_RECORDS, params, { method: 'GET' });
     dispatch({
       type: SERVICE_PERSONAL_RECORDS.SERVICE_PERSONAL_RECORDS_SUCCESS,
       payload: data
@@ -58,7 +58,7 @@ export const SERVICE_RECORDS_RESULT = {
   SERVICE_RECORDS_RESULT_FAIL: 'SERVICE_RECORDS_RESULT_FAIL'
 };
 
-export const getRecordsResult = params => async dispatch => {
+export const saveRecordsResult = params => async dispatch => {
   dispatch({
     type: SERVICE_RECORDS_RESULT.SERVICE_RECORDS_RESULT_REQUEST,
     payload: params

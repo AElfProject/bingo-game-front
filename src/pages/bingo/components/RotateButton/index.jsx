@@ -5,18 +5,17 @@ import './index.less';
 
 const RotateButton = props => {
   const {
-    name, click, width, tabIndex, nameStyle, i18n: { language }
+    name, click, tabIndex, i18n: { language }, className, size
   } = props;
   return (
     <div
-      className="btnConfirm"
+      className={`${className} btnConfirm${size === 'small' ? ' btnSmall' : ''}`}
       role="button"
       tabIndex={tabIndex}
       onClick={click}
       onKeyDown={() => {}}
-      style={{ width, height: width }}
     >
-      <div style={language === 'en' ? { width: 'auto' } : { width: 'auto', ...nameStyle }}>
+      <div style={language === 'en' ? { width: 'auto' } : {}}>
         {name}
       </div>
     </div>
@@ -25,26 +24,22 @@ const RotateButton = props => {
 
 
 RotateButton.defaultProps = {
-  name: '',
-  click: () => {},
-  width: '150px',
   tabIndex: 0,
-  nameStyle: {},
   i18n: {
     language: 'zh'
-  }
+  },
+  className: '',
+  size: 'normal'
 };
 
 RotateButton.propTypes = {
-  name: PropTypes.string,
-  click: PropTypes.func,
-  width: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  click: PropTypes.func.isRequired,
   tabIndex: PropTypes.number,
-  nameStyle: PropTypes.shape({
-    width: PropTypes.string
-  }),
   i18n: PropTypes.shape({
     language: PropTypes.string
-  })
+  }),
+  className: PropTypes.string,
+  size: PropTypes.string
 };
 export default withTranslation()(RotateButton);

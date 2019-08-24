@@ -10,11 +10,8 @@
 
   .title {
     font-size: 65px;
-    background: linear-gradient(
-      to right,
-      rgb(49, 255, 254),
-      rgb(19, 128, 127) /*rgb(190, 240, 239)*/
-    );
+    height: 65px;
+    background: linear-gradient(to right, rgb(49, 255, 254), rgb(19, 128, 127));
     background-clip: text;
     color: transparent;
   }
@@ -24,28 +21,23 @@
     justify-content: space-around;
     align-items: center;
     border: none;
-    width: 80%;
-
-    // .title {
-    //   font-size: @fontSize;
-    //   width: @titleW;
-    //   height: @titleW;
-    //   display: flex;
-    //   align-items: center;
-    //   margin-right: 10px;
-    // }
+    width: 80vw;
 
     .registerInputList {
-      width: 60%;
+      width: 48vw;
+      color:black;
 
       :first-child {
         border-radius: 5px;
         background-color: transparent;
-        width: 100%;
+        //width: 100%;
       }
 
       .inputItem {
         background-color: @btnColor;
+        .am-list-line .am-input-control > input:disabled{
+          color:black;
+        }
       }
     }
   }

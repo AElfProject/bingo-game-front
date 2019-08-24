@@ -8,24 +8,21 @@
 }
 
 @fontSize: 20px;
-// @btnWidth: 90px;
+@width: 80px;
 .ShowBtnConfirm {
-  //background: url(../../../../static/buttonBG.png) no-repeat;
-  // width: @btnWidth;
-  // height: @btnWidth;
-
   display: flex;
   justify-content: center;
   align-items: center;
   color: #2ffffe;
   font-size: @fontSize;
   font-weight: bold;
-
+  width: @width;
+  height: @width;
   position: relative;
   overflow: hidden;
 
   > span {
-    width: 2 * @fontSize;
+    width: 2 * @fontSize + 1px;
   }
 
   :before {
