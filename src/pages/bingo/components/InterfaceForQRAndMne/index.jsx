@@ -38,28 +38,26 @@ class InterfaceForRQAndMne extends React.Component {
       onDone, children, title, subtitle, btnName, t, center
     } = this.props;
     return (
-      <>
-        <div
-          className="interface"
-        >
-          <div className="titleBar">
-            <span className="titlefir">{`-${title}-`}</span>
-            <span className="subtitle">{subtitle}</span>
-          </div>
-
-          <div className="contentShow" style={center ? { justifyContent: 'center' } : {}}>
-            <div className="record-tl" />
-            <div className="record-tr" />
-            <div className="record-bl" />
-            <div className="record-br" />
-
-            {children}
-
-          </div>
-
-          <RotateButton name={btnName || t('done')} click={onDone} />
+      <div
+        className="interface"
+      >
+        <div className="titleBar">
+          <span className="titlefir">{`-${title}-`}</span>
+          <span className="subtitle">{subtitle}</span>
         </div>
-      </>
+
+        <div className="contentShow" style={center ? { justifyContent: 'center' } : {}}>
+          <div className="record-tl" />
+          <div className="record-tr" />
+          <div className="record-bl" />
+          <div className="record-br" />
+
+          {children}
+
+        </div>
+
+        <RotateButton name={btnName || t('done')} click={onDone} />
+      </div>
     );
   }
 }

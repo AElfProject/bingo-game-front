@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import store from 'store2';
 import {
-  List, InputItem, Button, Toast, ActivityIndicator, Modal
+  List, InputItem, Button, Toast, Modal
 } from 'antd-mobile';
 import { If, Then, Else } from 'react-if';
 import AElf from 'aelf-sdk';
@@ -82,8 +82,6 @@ class BingoGame extends React.Component {
   }
 
   componentDidMount() {
-    console.log('playProps', this.props);
-
     const { getTopRecords: topRecords, getPersonalRecords: personalRecords } = this.props;
     const { mnemonic } = store.session.get(STORE_KEY.WALLET_INFO);
     const wallet = AElf.wallet.getWalletByMnemonic(mnemonic);
@@ -95,7 +93,6 @@ class BingoGame extends React.Component {
       pageSize: 20
     });
 
-    // remove to  register
     const { sha256 } = AElf.utils;
     const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
     aelf.chain.getChainStatus()
@@ -201,6 +198,10 @@ class BingoGame extends React.Component {
   };
 
   playClick = () => {
+    const { loaded } = this.state;
+    if (!loaded) {
+      return;
+    }
     const { inputHasError, inputCards } = this.state;
 
     if (inputHasError || !inputCards) {
@@ -213,8 +214,6 @@ class BingoGame extends React.Component {
 
       // local chain contract start
       const { bingoGameContract } = this;
-
-
       bingoGameContract.Play({ value: inputCards })
         .then(result => bingoGameContract.Bingo(result.TransactionId))
         .then(
@@ -296,7 +295,6 @@ class BingoGame extends React.Component {
   render() {
     const {
       cards,
-      loaded,
       inputCards,
       inputHasError,
       opening,
@@ -320,120 +318,115 @@ class BingoGame extends React.Component {
     } = this.props;
     return (
       <>
-        <If condition={loaded}>
-          <Then>
-            <div className="play">
+        <div className="play">
 
-              <Navigation title="Bingo" type="play" />
-              <div>
-                <span className="title">Bingo</span>
-                <span className="title">Game</span>
-              </div>
-              <h2>
-              Your CARD：
-                <span>
-                  {`${cards} `}
-                </span>
-              CARD
-              </h2>
-              <List className="inputList">
-                <InputItem
-                  className="inputItem"
-                  type="money"
-                  value={inputCards}
-                  // placeholder="Subscription amount"
-                  clear
-                  autoAdjustHeight
-                  onChange={this.cardChange}
-                  error={inputHasError}
-                  onErrorClick={this.onErrorClick}
-                  disabled={opening}
-                />
-              </List>
+          <Navigation title="Bingo" type="play" />
+          <div>
+            <span className="title">Bingo</span>
+            <span className="title">Game</span>
+          </div>
+          <h2>
+          Your CARD：
+            <span>
+              {`${cards} `}
+            </span>
+          CARD
+          </h2>
+          <List className="inputList">
+            <InputItem
+              className="inputItem"
+              type="money"
+              value={inputCards}
+              // placeholder="Subscription amount"
+              clear
+              autoAdjustHeight
+              onChange={this.cardChange}
+              error={inputHasError}
+              onErrorClick={this.onErrorClick}
+              disabled={opening}
+            />
+          </List>
 
-              <div className="whiteColor">
-                ————
-                {t('batAmount')}
-                ————
-              </div>
+          <div className="whiteColor">
+            ————
+            {t('batAmount')}
+            ————
+          </div>
 
-              <Button
-                className="btn"
-                onClick={() => {
-                  this.setNumber(1000);
-                }}
-                disabled={opening}
-              >
-              1000
-              </Button>
-              <Button
-                className="btn"
-                disabled={opening}
-                onClick={() => this.setNumber(2000)}
-              >
-              2000
-              </Button>
-              <Button
-                className="btn"
-                disabled={opening}
-                onClick={() => this.setNumber('Half')}
-              >
-              Half
-              </Button>
-              <Button
-                className="btn"
-                disabled={opening}
-                onClick={() => this.setNumber('All-In')}
-              >
-              All-in
-              </Button>
+          <Button
+            className="btn"
+            onClick={() => {
+              this.setNumber(1000);
+            }}
+            disabled={opening}
+          >
+          1000
+          </Button>
+          <Button
+            className="btn"
+            disabled={opening}
+            onClick={() => this.setNumber(2000)}
+          >
+          2000
+          </Button>
+          <Button
+            className="btn"
+            disabled={opening}
+            onClick={() => this.setNumber('Half')}
+          >
+          Half
+          </Button>
+          <Button
+            className="btn"
+            disabled={opening}
+            onClick={() => this.setNumber('All-In')}
+          >
+          All-in
+          </Button>
 
-              <RotateButton
-                name="PLAY"
-                click={this.playClick}
-              />
+          <RotateButton
+            className="playBtn"
+            name="PLAY"
+            click={this.playClick}
+          />
 
-              <div className="playTips">{t('playTips')}</div>
+          <div className="playTips">{t('playTips')}</div>
 
-              <div className="recordFrame">
-                <Button onClick={() => this.tabChange('allRecords')} className="recordBtn">{t('allRecords')}</Button>
-                <Button onClick={() => this.tabChange('myRecords')} className="recordBtn">{t('myRecords')}</Button>
-              </div>
+          <div className="recordFrame">
+            <Button onClick={() => this.tabChange('allRecords')} className="recordBtn">{t('allRecords')}</Button>
+            <Button onClick={() => this.tabChange('myRecords')} className="recordBtn">{t('myRecords')}</Button>
+          </div>
 
-            </div>
-            <If condition={records}>
-              <Then><Record type="allRecords" info={topData} refresh={() => topRecords()} /></Then>
-              <Else>
-                <Record
-                  type="myRecords"
-                  info={personalData}
-                  refresh={() => personalRecords({
-                    address: store.get(STORE_KEY.ADDRESS),
-                    pageNum: 1,
-                    pageSize: 20
-                  })}
-                />
-              </Else>
-            </If>
-
-            <Modal
-              visible={showModal}
-              transparent
-              maskClosable
-              className="bingo-play-modal"
-            >
-              <ModalContent confirm={this.modalConfirm} btnName={t('resultConfirm')}>
-                <>
-                  <div className="play-info-1">{resultInfo}</div>
-                  <div className="play-info-2">{t('accountBalance')}</div>
-                  <div className="play-info-3">{`${cards} CARD`}</div>
-                </>
-              </ModalContent>
-            </Modal>
-          </Then>
-
-          <Else><ActivityIndicator size="large" /></Else>
+        </div>
+        <If condition={records}>
+          <Then><Record type="allRecords" info={topData} refresh={() => topRecords()} /></Then>
+          <Else>
+            <Record
+              type="myRecords"
+              info={personalData}
+              refresh={() => personalRecords({
+                address: store.get(STORE_KEY.ADDRESS),
+                pageNum: 1,
+                pageSize: 20
+              })}
+            />
+          </Else>
         </If>
+
+        <Modal
+          visible={showModal}
+          transparent
+          maskClosable
+          className="bingo-play-modal"
+        >
+          <ModalContent confirm={this.modalConfirm} btnName={t('resultConfirm')}>
+            <>
+              <div className="play-info-1">{resultInfo}</div>
+              <div className="play-info-2">{t('accountBalance')}</div>
+              <div className="play-info-3">{`${cards} CARD`}</div>
+            </>
+          </ModalContent>
+        </Modal>
       </>
     );
   }

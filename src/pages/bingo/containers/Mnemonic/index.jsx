@@ -48,20 +48,18 @@ class Mnemonic extends React.Component {
     const { t } = this.props;
     const { mnemonic } = this.state;
     return (
-      <>
-        <InterfaceForQRAndMne
-          key="mnemonic"
-          title={t('backupMnemonic')}
-          subtitle={t('mnemonicPrompt')}
-          onDone={this.onDone}
-        >
-          <>
-            {mnemonic.split(' ').map(data => (
-              <div key={data} className="word">{data}</div>
-            ))}
-          </>
-        </InterfaceForQRAndMne>
-      </>
+      <InterfaceForQRAndMne
+        key="mnemonic"
+        title={t('backupMnemonic')}
+        subtitle={t('mnemonicPrompt')}
+        onDone={this.onDone}
+      >
+        <>
+          {mnemonic.split(' ').map(data => (
+            <div key={data} className="word">{data}</div>
+          ))}
+        </>
+      </InterfaceForQRAndMne>
     );
   }
 }

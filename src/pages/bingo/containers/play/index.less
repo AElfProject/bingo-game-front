@@ -11,10 +11,17 @@
 
   width: 100%;
   height: 100vh;
+
+  .btnConfirm{
+    > div{
+      width: auto;
+    }
+  }
 }
 
 .inputList {
   opacity: 0.6;
+  margin-bottom: @marginTop;
 
   :first-child {
     border-radius: 5px;
@@ -22,13 +29,13 @@
 
   .inputItem {
     width: @frameWidth;
-    height: 40px;
+    height: 6vh;
     background-color: @btnColor;
   }
 }
 
 .title {
-  font-size: 65px;
+  font-size: 8vh;
   background: linear-gradient(to right, rgb(49, 255, 254), rgb(19, 128, 127));
   background-clip: text;
   color: transparent;
@@ -44,6 +51,8 @@
 
 h2 {
   .whiteColor;
+  margin: 0;
+  font-size: 24px;
   > span {
     color: rgb(255, 241, 127);
   }
@@ -52,20 +61,22 @@ h2 {
 @btnHeight: 40px;
 .btn {
   width: @frameWidth+15px;
+  height: 6vh;
   font-size: 18px;
-  height: @btnHeight;
-  line-height: @btnHeight;
+  line-height: 6vh;
   background-color: @btnColor;
+  margin-top: 1vh;
 }
 
 .recordFrame {
   display: flex;
   justify-content: space-around;
-  width: 80%;
-  margin: @marginTop 0;
+  width: 80vw;
+  margin: 1vh 0;
 
   .recordBtn {
-    width: 40%;
+    width: 32vw;
+    height: 5.4vh;
     height: @btnHeight;
     line-height: @btnHeight;
     background-color: @btnColor;
@@ -78,14 +89,19 @@ h2 {
   text-align: center;
 }
 
+.playBtnSmall{
+  display: none;
+}
+
 // Record.jsx
 @recordWidth: 80%;
-@recordHeight: calc(100vh - 60px);
+@recordHeight: 92vh;
 .record {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: @recordHeight;
+  overflow: hidden;
 }
 @titleHeight: 20px;
 .recordTitle {

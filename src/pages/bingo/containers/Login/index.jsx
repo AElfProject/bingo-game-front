@@ -69,17 +69,14 @@ class Login extends React.PureComponent {
     const wallet = AElf.wallet.getWalletByMnemonic(mnemonic);
     logToPlay(wallet);
     store.session.set(STORE_KEY.WALLET_INFO, wallet);
-    console.log(wallet);
     history.push('/play');
   };
 
   handleLogin = () => {
-    // todo: get password from input
     try {
       const { password } = this.state;
       this.getWalletFromKeyStore(password);
     } catch (e) {
-      console.log('trycatch', e);
       if (e.error === 200001) {
         Toast.info(e.errorMessage);
       }

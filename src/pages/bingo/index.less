@@ -1,12 +1,21 @@
+
+@minHeight: 550px;
+
 body {
   color: blue;
   font-size: 16px;
 }
 
-#app #background .am-list-body {
-  // Remove the border of the antd Input
-  &:after,
-  &:before {
-    display: none;
+#app #background {
+  .am-list-body {
+    // Remove the border of the antd Input
+    &:after,
+    &:before {
+      display: none;
+    }
+  }
+
+  .bingo-register,.bingo-login, .interface, .play{
+    min-height: @minHeight;
   }
 }

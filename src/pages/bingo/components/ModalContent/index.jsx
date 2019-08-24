@@ -23,17 +23,12 @@ const ModalContent = props => {
           </div>
         </Then>
       </If>
-      {/* modelContent Positioning in absolute positioning, width & height are fixed */}
       <div className="content">
         {children}
       </div>
       <RotateButton
         name={btnName || t('startGame')}
-        width="110px"
-        nameStyle={{
-          fontSize: '15px',
-          width: '30px'
-        }}
+        size="small"
         click={confirm}
       />
     </div>

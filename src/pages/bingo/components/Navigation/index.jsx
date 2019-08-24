@@ -40,7 +40,6 @@ class Navigation extends React.Component {
   }
 
   handleVisibleChange = visible => {
-    console.log('visible', visible);
     this.setState({
       visible,
     });

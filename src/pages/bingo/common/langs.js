@@ -76,7 +76,7 @@ export const resources = {
       inValidTitle: '提示',
       inValidRegister: '注册失败，请稍后重试',
       registerSuccessTitle: '注册成功',
-      registerSuccessInfoFir: '欢迎使用AElf不删档测试网络',
+      registerSuccessInfoFir: '欢迎使用AElf',
       registerSuccessInfoSec: '您是第',
       registerSuccessInfoThird: '位接入用户',
       address: '地址',

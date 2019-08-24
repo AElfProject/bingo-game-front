@@ -32,14 +32,13 @@ const RotateButton = props => {
 
 
 RotateButton.defaultProps = {
-  name: '',
   width: '',
   tabIndex: 0,
   fontSize: '',
 };
 
 RotateButton.propTypes = {
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   width: PropTypes.string,
   tabIndex: PropTypes.number,
   fontSize: PropTypes.string,

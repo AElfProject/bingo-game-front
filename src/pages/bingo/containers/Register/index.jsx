@@ -83,7 +83,6 @@ class Register extends React.PureComponent {
   modalContent = memoizeOne(this.getModalContent);
 
   onConfirm = () => {
-    // todo: 跳转
     const { history } = this.props;
     this.setState({
       showModal: false,
@@ -102,7 +101,7 @@ class Register extends React.PureComponent {
     } else if (errors.confirmPassword) {
       info = errors.confirmPasswordMsg;
     } else {
-      info = 'please check your input';
+      info = 'someting went wrong';
     }
 
     if (
@@ -125,6 +124,34 @@ class Register extends React.PureComponent {
     store.session.set(STORE_KEY.WALLET_INFO, wallet);
     const { address } = wallet;
 
+    request(API_PATH.REGISTER, {
+      name: values.name,
+      address: wallet.address
+    }).then(res => {
+      if (+res.code === 0) {
+        const { count } = res.data;
+        this.setState({
+          showModal: true
+        });
+        saver({
+          wallet,
+          name: values.name,
+          count
+        });
+        const keyStore = AElf.wallet.keyStore.getKeystore(
+          wallet,
+          values.password,
+          {
+            cipher: 'aes-256-cbc'
+          }
+        );
+        store(STORE_KEY.KEY_STORE, keyStore);
+        store(STORE_KEY.ADDRESS, address);
+      } else {
+        throw new Error(res.msg);
+      }
+    });
+
     // contract initialization
     const { sha256 } = AElf.utils;
     const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));
@@ -134,33 +161,6 @@ class Register extends React.PureComponent {
       .then(zeroC => zeroC.GetContractAddressByName.call(sha256('AElf.ContractNames.BingoGameContract')))
       .then(bingoAddress => aelf.chain.contractAt(bingoAddress, wallet))
       .then(bingoGameContract => {
-        request(API_PATH.REGISTER, {
-          name: values.name,
-          address: wallet.address
-        }).then(res => {
-          if (+res.code === 0) {
-            const { count } = res.data;
-            this.setState({
-              showModal: true
-            });
-            saver({
-              wallet,
-              name: values.name,
-              count
-            });
-            const keyStore = AElf.wallet.keyStore.getKeystore(
-              wallet,
-              values.password,
-              {
-                cipher: 'aes-256-cbc'
-              }
-            );
-            store(STORE_KEY.KEY_STORE, keyStore);
-            store(STORE_KEY.ADDRESS, address);
-          } else {
-            throw new Error(res.msg);
-          }
-        });
         bingoGameContract.Register();
       })
       .catch(err => {
@@ -297,24 +297,24 @@ class Register extends React.PureComponent {
     i18n.changeLanguage(nextLanguage);
   };
 
-  scan = () => {
-    const { history } = this.props;
-    history.push('/QRscan');
-    console.log('scan');
-  };
+  // scan = () => {
+  //   const { history } = this.props;
+  //   history.push('/QRscan');
+  // };
 
   render() {
     const { t, count, wallet } = this.props;
     const { values, errors, showModal } = this.state;
     return (
       <div className="bingo-register">
+        {/* qrcode scan function,Not need it for now
         <div className="scanRegister">
           {t('scanRegister1')}
           <button type="button" onClick={this.scan}>
             {t('scanRegister2')}
           </button>
           {t('scanRegister3')}
-        </div>
+        </div> */}
         <div className="register-input">
           <div className="inputLine">
             <ShowRotateBtn name={t('nickName')} />
