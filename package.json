@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run clean && cross-env NODE_ENV=production webpack --progress --colors --display-chunks --config ./build/webpack.prod.js",
+    "build": "npm run clean && cross-env NODE_ENV=production webpack --progress --colors --display-chunks --config ./build/webpack.prod.js && sh scripts/config-repair-page.sh",
     "analyze": "npm run clean && cross-env NODE_ENV=production webpack --config ./build/webpack.analyze.js",
     "clean": "rimraf dist/*",
     "commit": "git-cz",
@@ -37,6 +37,7 @@
     "lodash": "^4.17.15",
     "lodash-decorators": "^6.0.1",
     "memoize-one": "^5.0.5",
+    "minireset.css": "^0.0.5",
     "prop-types": "^15.7.2",
     "qrcode-reader": "^1.0.4",
     "qrcode.react": "^0.9.3",
