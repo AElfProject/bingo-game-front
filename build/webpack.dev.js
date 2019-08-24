@@ -46,7 +46,8 @@ const proxyServer = devMode === 'local' ? {} : proxy.map(v => {
 
 const devConfig = {
   mode: 'development',
-  devtool: 'source-map',
+  // devtool: 'source-map',
+  devtool: 'eval',
   output: {
     filename: '[name].js'
   },
@@ -59,10 +60,12 @@ const devConfig = {
     disableHostCheck: true,
     contentBase: OUTPUT_PATH,
     host: '0.0.0.0',
-    port: 9527,
+    port: 9528,
     compress: true,
     hot: false,
-    inline: false,
+    open: true, // Auto open page after run yarn dev
+    openPage: 'index.html', // Auto open page after run yarn dev
+    inline: true,  // Auto open page after run yarn dev
     historyApiFallback: true,
     proxy: proxyServer,
     before(app) {
