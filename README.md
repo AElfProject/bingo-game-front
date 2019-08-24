@@ -15,22 +15,44 @@ You can learn basic usage of [aelf](https://github.com/AElfProject/AElf)
 
 ## Quick start
 
-First of all, you need an aelf chain with bingo-game contract.  
-If you don't know how to build an aelf chain or don't hava a ready-made aelf chain, you can refer to our [Official Documents](https://docs.aelf.io/main/main/setup)-Tutorials-How to dev a DAPP-Setup Env
+- This project uses node and npm. Go check them out if you don't have them locally installed.
 
-### Npm
+- This project rely on aelf chain with bingo-game contract.  
+  If you don't know how to build an aelf chain or don't hava a ready-made aelf chain, you can refer to our [Official Documents](https://docs.aelf.io/main/main/setup)-Tutorials-'How to dev a DAPP'-Setup Env
+
+- You can change the aelf chain addres in `./src/page/bingo/common/constans.js`
+
+
+### Start with mock data
+#### Npm
 
 ```bash
 npm install
 npm run dev
 ```
 
-### Yarn
+#### Yarn
 
 ```bash
 yarn
 yarn run dev
 ```
+
+### Start with Api
+#### Npm
+
+```bash
+npm install
+npm run test
+```
+
+#### Yarn
+
+```bash
+yarn
+yarn run test
+```
+
 
 then open [http://0.0.0.0:9527/index.html](http://0.0.0.0:9527/index.html) in your browser
 
@@ -39,42 +61,18 @@ you can check it in F12 -> Application**
 
 ## Develop
 
-```text
-/src
-```
-
-- src/common/
-  _Global static variables and methods_
-  - constants.js  
-    _Api path, Session Variable name, Regular expression_
-  - request.js  
-    _function to send an Api_
-- src/pages/
-  - bingo/
-    - actions/  
-      _redux-actions_
-    - common/  
-      _common useful function for pages,such as: language switching_
-    - components/  
-      _Generic Component_
-    - coontainers/  
-      _Actual pages_
-    - reducers/  
-      _redux-reducer_
-
-### Use Api
-
-**you must calling Api by dispatch an action**
-
-1. in your page, trigger function
-2. in actions, dispatch a server_request, and then request api,if api returns correctly dipatch server_success, else dispatch server_fail
-3. in reducers, storage returned data.
-
 ### Rules
 
 Using Airbnb encoding rules
 
-## How to mock data
+### Use Api
+
+- put path in `./src/common/constants.js`
+- use request function in `./src/common/request.js` to send Api
+
+_We also recommand you send Api by dispatch_
+
+### How to set mock data
 
 set mock data and api path Mapping:
 

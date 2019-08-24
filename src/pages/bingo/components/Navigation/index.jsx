@@ -37,6 +37,7 @@ class Navigation extends React.Component {
     this.state = {
       visible: false,
     };
+    this.goBack = this.goBack.bind(this);
   }
 
   handleVisibleChange = visible => {
@@ -44,27 +45,6 @@ class Navigation extends React.Component {
       visible,
     });
   };
-
-  switchLanguage = async () => {
-    const { i18n } = this.props;
-    const { language: rightLanguage } = i18n;
-    let nextLanguage = 'en';
-    if (rightLanguage === 'en') {
-      nextLanguage = 'zh';
-    }
-    i18n.changeLanguage(nextLanguage);
-  }
-
-  pageJump = () => {
-    const { type, history } = this.props;
-    let path = null;
-    if (type === 'play') {
-      path = '/mnemonic';
-    } else if (type === 'mnemonic') {
-      path = '/play';
-    }
-    history.push(path);
-  }
 
   onSelect = opt => {
     const { history } = this.props;
@@ -86,9 +66,30 @@ class Navigation extends React.Component {
     });
   };
 
-  goBack = () => {
+  pageJump() {
+    const { type, history } = this.props;
+    let path = null;
+    if (type === 'play') {
+      path = '/mnemonic';
+    } else if (type === 'mnemonic') {
+      path = '/play';
+    }
+    history.push(path);
+  }
+
+  goBack() {
     const { history } = this.props;
     history.goBack();
+  }
+
+  switchLanguage() {
+    const { i18n } = this.props;
+    const { language: rightLanguage } = i18n;
+    let nextLanguage = 'en';
+    if (rightLanguage === 'en') {
+      nextLanguage = 'zh';
+    }
+    i18n.changeLanguage(nextLanguage);
   }
 
   render() {

@@ -5,7 +5,7 @@
 
 // request path
 export const API_PATH = {
-  INIT_CSRF_TOKEN: '/bingo/initToken',
+  INIT_CSRF_TOKEN: '/bingo/initCsrfToken',
   REGISTER: '/bingo/register',
   TOP_RECORDS: '/bingo/topRecords',
   PERSONAL_RECORDS: '/bingo/personalRecords',

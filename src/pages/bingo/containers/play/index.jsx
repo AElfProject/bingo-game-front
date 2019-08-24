@@ -223,18 +223,7 @@ class BingoGame extends React.Component {
           const {
             getTopRecords: topRecords, saveRecordsResult: recordsResult, getPersonalRecords: personalRecords
           } = this.props;
-
-          await recordsResult({
-            result: difference,
-            address: store.get(STORE_KEY.ADDRESS)
-          });
-
-          personalRecords({
-            address: store.get(STORE_KEY.ADDRESS),
-            pageNum: 1,
-            pageSize: 20
-          });
-          topRecords();
+          const { records } = this.state;
 
           let info = null;
           if (difference >= 0) {
@@ -248,6 +237,21 @@ class BingoGame extends React.Component {
             showModal: true,
             resultInfo: info
           });
+
+          await recordsResult({
+            result: difference,
+            address: store.get(STORE_KEY.ADDRESS)
+          });
+
+          if (records) {
+            topRecords();
+          } else {
+            personalRecords({
+              address: store.get(STORE_KEY.ADDRESS),
+              pageNum: 1,
+              pageSize: 20
+            });
+          }
         })
         .catch(err => {
           this.setState({
@@ -320,7 +324,7 @@ class BingoGame extends React.Component {
       <>
         <div className="play">
 
-          <Navigation title="Bingo" type="play" />
+          <Navigation type="play" />
           <div>
             <span className="title">Bingo</span>
             <span className="title">Game</span>
