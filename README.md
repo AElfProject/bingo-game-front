@@ -17,26 +17,12 @@ You can learn basic usage of [aelf](https://github.com/AElfProject/AElf)
 
 - This project uses node and npm. Go check them out if you don't have them locally installed.
 
-- This project rely on aelf chain with bingo-game contract.  
+- This project relies on aelf chain with bingo-game contract.
   If you don't know how to build an aelf chain or don't hava a ready-made aelf chain, you can refer to our [Official Documents](https://docs.aelf.io/main/main/setup)-Tutorials-'How to dev a DAPP'-Setup Env
 
 - You can change the aelf chain addres in `./src/page/bingo/common/constans.js`
 
 
-### Start with mock data
-#### Npm
-
-```bash
-npm install
-npm run dev
-```
-
-#### Yarn
-
-```bash
-yarn
-yarn run dev
-```
 
 ### Start with Api
 #### Npm
@@ -53,26 +39,24 @@ yarn
 yarn run test
 ```
 
+You can change the Api mapping address in `./build/proxy.json`
 
-then open [http://0.0.0.0:9527/index.html](http://0.0.0.0:9527/index.html) in your browser
+### Start with mock data
+#### Npm
 
-**Notice: after registration, some account information store in Storage.<br>
-you can check it in F12 -> Application**
+```bash
+npm install
+npm run dev
+```
 
-## Develop
+#### Yarn
 
-### Rules
+```bash
+yarn
+yarn run dev
+```
 
-Using Airbnb encoding rules
-
-### Use Api
-
-- put path in `./src/common/constants.js`
-- use request function in `./src/common/request.js` to send Api
-
-_We also recommand you send Api by dispatch_
-
-### How to set mock data
+#### How to set mock data
 
 set mock data and api path Mapping:
 
@@ -87,3 +71,24 @@ build/
 ```
 
 rebuild the project, and then you can use mock data.
+
+
+then open [http://0.0.0.0:9527/index.html](http://0.0.0.0:9527/index.html) in your browser
+
+**Notice: after registration, some account information store in Storage.<br>
+you can check it in F12 -> Application**
+
+## Develop
+
+### Rules
+
+Using Airbnb coding rules
+> A mostly reasonable approach to JavaScript
+
+### Use Api
+
+- put path in `./src/common/constants.js`
+- use request function in `./src/common/request.js` to send Api
+
+_We also recommand you send Api by dispatch_
+

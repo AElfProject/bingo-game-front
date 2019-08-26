@@ -6,6 +6,7 @@ body {
   font-size: 16px;
 }
 
+// Change the default style of ‘antd’
 #app #background {
   .am-list-body {
     // Remove the border of the antd Input
@@ -18,4 +19,28 @@ body {
   .bingo-register,.bingo-login, .interface, .play{
     min-height: @minHeight;
   }
+}
+
+@color:#2ffffe;
+.am-popover-mask{
+  background-color: rgba(0,0,0,.7);
+}
+.am-popover-content{
+  .am-popover-arrow{
+    background-color: @color;
+  }
+
+  .am-popover-inner{
+    //color:@color;
+
+    .am-popover-inner-wrapper{
+      color: @color;
+      border: 1px solid @color;
+      background-color: rgb(0,0,0);
+    }
+  }
+}
+
+.am-modal-mask{
+  background-color: rgba(0,0,0,0.7);
 }

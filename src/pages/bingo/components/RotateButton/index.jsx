@@ -5,7 +5,7 @@ import './index.less';
 
 const RotateButton = props => {
   const {
-    name, click, tabIndex, i18n: { language }, className, size
+    name, click, tabIndex, i18n: { language }, className, size, type
   } = props;
   return (
     <div
@@ -15,7 +15,7 @@ const RotateButton = props => {
       onClick={click}
       onKeyDown={() => {}}
     >
-      <div style={language === 'en' ? { width: 'auto' } : {}}>
+      <div className="btnConfirmWord" style={language === 'en' || type === 'en' ? { width: 'auto' } : {}}>
         {name}
       </div>
     </div>
@@ -29,7 +29,8 @@ RotateButton.defaultProps = {
     language: 'zh'
   },
   className: '',
-  size: 'normal'
+  size: 'normal',
+  type: 'zh'
 };
 
 RotateButton.propTypes = {
@@ -40,6 +41,7 @@ RotateButton.propTypes = {
     language: PropTypes.string
   }),
   className: PropTypes.string,
-  size: PropTypes.string
+  size: PropTypes.string,
+  type: PropTypes.string
 };
 export default withTranslation()(RotateButton);

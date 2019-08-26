@@ -6,7 +6,7 @@ import React from 'react';
 import store from 'store2';
 import AElf from 'aelf-sdk';
 import {
-  InputItem, List, Modal, WhiteSpace, Toast
+  InputItem, List, Modal, Toast
 } from 'antd-mobile';
 import { bindActionCreators, compose } from 'redux';
 import memoizeOne from 'memoize-one';
@@ -26,6 +26,34 @@ import ShowRotateBtn from '../../components/ShowRotateBtn';
 import ModalContent from '../../components/ModalContent';
 import { localHttp } from '../../common/constants';
 import './index.less';
+
+const inputBox = [
+  {
+    btnName: 'nickName',
+    type: 'text',
+    error: 'nameError',
+    onChange: 'nameInput',
+    value: 'name',
+    errorClick: 'nickName'
+  },
+  {
+    btnName: 'password',
+    type: 'password',
+    error: 'passwordError',
+    onChange: 'passwordInput',
+    value: 'password',
+    errorClick: 'password',
+  },
+  {
+    btnName: 'confirmPassword',
+    type: 'password',
+    error: 'confirmPasswordError',
+    onChange: 'confirmPasswordInput',
+    value: 'confirmPassword',
+    errorClick: 'confirmPassword',
+  },
+];
+
 
 class Register extends React.PureComponent {
   static propTypes = {
@@ -83,11 +111,14 @@ class Register extends React.PureComponent {
   modalContent = memoizeOne(this.getModalContent);
 
   onConfirm = () => {
-    const { history } = this.props;
     this.setState({
       showModal: false,
       isLoading: false
     });
+    if (!store.get(STORE_KEY.ADDRESS)) {
+      return;
+    }
+    const { history } = this.props;
     history.push('/play');
   };
 
@@ -116,7 +147,8 @@ class Register extends React.PureComponent {
     }
 
     this.setState({
-      isLoading: true
+      isLoading: true,
+      showModal: true,
     });
 
     const { t, register: saver } = this.props;
@@ -124,33 +156,34 @@ class Register extends React.PureComponent {
     store.session.set(STORE_KEY.WALLET_INFO, wallet);
     const { address } = wallet;
 
-    request(API_PATH.REGISTER, {
-      name: values.name,
-      address: wallet.address
-    }).then(res => {
-      if (+res.code === 0) {
-        const { count } = res.data;
-        this.setState({
-          showModal: true
-        });
-        saver({
-          wallet,
-          name: values.name,
-          count
-        });
-        const keyStore = AElf.wallet.keyStore.getKeystore(
-          wallet,
-          values.password,
-          {
-            cipher: 'aes-256-cbc'
-          }
-        );
-        store(STORE_KEY.KEY_STORE, keyStore);
-        store(STORE_KEY.ADDRESS, address);
-      } else {
-        throw new Error(res.msg);
-      }
-    });
+    try {
+      request(API_PATH.REGISTER, {
+        name: values.name,
+        address: wallet.address
+      }).then(res => {
+        if (+res.code === 0) {
+          const { count } = res.data;
+          saver({
+            wallet,
+            name: values.name,
+            count
+          });
+          const keyStore = AElf.wallet.keyStore.getKeystore(
+            wallet,
+            values.password,
+            {
+              cipher: 'aes-256-cbc'
+            }
+          );
+          store(STORE_KEY.KEY_STORE, keyStore);
+          store(STORE_KEY.ADDRESS, address);
+        } else {
+          throw new Error(res.msg);
+        }
+      });
+    } catch (e) {
+      Toast.info(e);
+    }
 
     // contract initialization
     const { sha256 } = AElf.utils;
@@ -302,9 +335,29 @@ class Register extends React.PureComponent {
   //   history.push('/QRscan');
   // };
 
+  inputShow = data => {
+    const { t } = this.props;
+    const { errors, values } = this.state;
+    return (
+      <div className="inputLine" key={data.btnName}>
+        <ShowRotateBtn name={t(data.btnName)} />
+        <List className="registerInputList">
+          <InputItem
+            type={data.type}
+            className="inputItem"
+            error={errors[data.error]}
+            onChange={this[data.onChange]}
+            value={values[data.value]}
+            onErrorClick={() => this.onErrorClick(data.errorClick)}
+          />
+        </List>
+      </div>
+    );
+  }
+
   render() {
     const { t, count, wallet } = this.props;
-    const { values, errors, showModal } = this.state;
+    const { showModal } = this.state;
     return (
       <div className="bingo-register">
         {/* qrcode scan function,Not need it for now
@@ -316,46 +369,7 @@ class Register extends React.PureComponent {
           {t('scanRegister3')}
         </div> */}
         <div className="register-input">
-          <div className="inputLine">
-            <ShowRotateBtn name={t('nickName')} />
-            <List className="registerInputList">
-              <InputItem
-                className="inputItem"
-                error={errors.nameError}
-                onChange={this.nameInput}
-                value={values.name}
-                onErrorClick={() => this.onErrorClick('nickName')}
-              />
-            </List>
-          </div>
-          <WhiteSpace size="lg" />
-          <div className="inputLine">
-            <ShowRotateBtn name={t('password')} />
-            <List className="registerInputList">
-              <InputItem
-                className="inputItem"
-                type="password"
-                error={errors.passwordError}
-                onChange={this.passwordInput}
-                value={values.password}
-                onErrorClick={() => this.onErrorClick('password')}
-              />
-            </List>
-          </div>
-          <WhiteSpace size="lg" />
-          <div className="inputLine">
-            <ShowRotateBtn name={t('confirmPassword')} />
-            <List className="registerInputList">
-              <InputItem
-                className="inputItem"
-                type="password"
-                error={errors.confirmPasswordError}
-                onChange={this.confirmPasswordInput}
-                value={values.confirmPassword}
-                onErrorClick={() => this.onErrorClick('confirmPassword')}
-              />
-            </List>
-          </div>
+          {inputBox.map(this.inputShow)}
         </div>
         <RotateButton name={t('register')} click={this.register} />
         <Modal

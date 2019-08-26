@@ -54,6 +54,8 @@ class Login extends React.PureComponent {
     this.state = {
       address: ''
     };
+    this.switchLanguage = this.switchLanguage.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
   componentDidMount() {
@@ -62,7 +64,7 @@ class Login extends React.PureComponent {
     });
   }
 
-  getWalletFromKeyStore = password => {
+  getWalletFromKeyStore(password) {
     const { history, login: logToPlay } = this.props;
     const keyStore = store.get(STORE_KEY.KEY_STORE);
     const { mnemonic } = AElf.wallet.keyStore.unlockKeystore(keyStore, password);
@@ -70,9 +72,15 @@ class Login extends React.PureComponent {
     logToPlay(wallet);
     store.session.set(STORE_KEY.WALLET_INFO, wallet);
     history.push('/play');
-  };
+  }
 
-  handleLogin = () => {
+  onChange = password => {
+    this.setState({
+      password
+    });
+  }
+
+  handleLogin() {
     try {
       const { password } = this.state;
       this.getWalletFromKeyStore(password);
@@ -81,15 +89,9 @@ class Login extends React.PureComponent {
         Toast.info(e.errorMessage);
       }
     }
-  };
-
-  onChange = password => {
-    this.setState({
-      password
-    });
   }
 
-  switchLanguage = () => {
+  switchLanguage() {
     const { i18n } = this.props;
     let nextLanguage = 'en';
     if (i18n.language === 'en') {

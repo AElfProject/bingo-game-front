@@ -56,7 +56,8 @@ export const resources = {
       scanRegister1:
         'Your address information has not been detected locally. If you have already registered, you can ',
       scanRegister2: 'click here',
-      scanRegister3: 'to scan the QRcode to restore your account information!'
+      scanRegister3: 'to scan the QRcode to restore your account information!',
+      errorMessage: 'Please enter a positive integer'
     }
   },
   zh: {
@@ -110,7 +111,8 @@ export const resources = {
       completeRefresh: '完成刷新',
       scanRegister1: '未在本地检测到您的地址信息，若您已申请过游戏账号，可',
       scanRegister2: '点击此处',
-      scanRegister3: '扫码恢复账号信息'
+      scanRegister3: '扫码恢复账号信息',
+      errorMessage: '请输入一个正整数'
     }
   }
 };

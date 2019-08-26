@@ -23,7 +23,7 @@ const RotateButton = props => {
       onKeyDown={() => {}}
       style={style}
     >
-      <span>
+      <span className="ShowBtnConfirmWord">
         {name}
       </span>
     </div>

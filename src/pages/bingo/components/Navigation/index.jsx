@@ -105,8 +105,8 @@ class Navigation extends React.Component {
       <NavBar
         style={{ width: '100%', backgroundColor: 'transparent', color: 'white' }}
         mode="light"
-        icon={<Icon type="left" />}
-        onLeftClick={this.goBack}
+        // icon={<Icon type="left" />}
+        // onLeftClick={this.goBack}
         rightContent={(
           <Popover
             visible={visible}
