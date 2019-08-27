@@ -3,6 +3,17 @@
 @btnColor: #2ffffe;
 @fontSize: 20px;
 
+@keyframes popUp{
+  from{
+    opacity: 0;
+    transform: translate(0, 20px);
+  }
+  to{
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
 .play {
   display: flex;
   flex-direction: column;
@@ -15,6 +26,14 @@
   .btnConfirm{
     > div{
       width: auto;
+    }
+  }
+  .card-balance{
+    display: inline-block;
+    animation: popUp 0.5s 0.5s;
+    text-align: center;
+    .fake-input-placeholder{
+      font-size: 12px;
     }
   }
 }
