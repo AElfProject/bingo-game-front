@@ -40,6 +40,14 @@ class Navigation extends React.Component {
     this.goBack = this.goBack.bind(this);
   }
 
+  componentDidMount() {
+    document.querySelector('body').addEventListener('click', e => {
+      if (e.target.className === 'am-popover-mask') {
+        this.setState({ visible: false });
+      }
+    });
+  }
+
   handleVisibleChange = visible => {
     this.setState({
       visible,
@@ -94,7 +102,9 @@ class Navigation extends React.Component {
 
   render() {
     const { visible } = this.state;
-    const { title, type, t } = this.props;
+    const {
+      title, type, t, i18n: { language }
+    } = this.props;
     let item = null;
     if (type === 'play') {
       item = t('backupMnemonic');
@@ -103,6 +113,7 @@ class Navigation extends React.Component {
     }
     return (
       <NavBar
+        key={language}
         style={{ width: '100%', backgroundColor: 'transparent', color: 'white' }}
         mode="light"
         // icon={<Icon type="left" />}
@@ -115,11 +126,11 @@ class Navigation extends React.Component {
               offset: [0, 0],
             }}
             onSelect={this.onSelect}
-            mask="true"
+            mask
             overlay={[
               (<Item key="0" value="auxiliaries">{item}</Item>),
-              (<Item key="1" value="QRcode"><span style={{ marginRight: 5 }}>{t('exportQRcode')}</span></Item>),
-              (<Item key="2" value="language"><span style={{ marginRight: 5 }}>中/EN</span></Item>)
+              (<Item key="1" value="QRcode"><span>{t('exportQRcode')}</span></Item>),
+              (<Item key="2" value="language"><span>中/EN</span></Item>)
             ]}
           >
             <Icon key="1" type="ellipsis" />
