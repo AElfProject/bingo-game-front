@@ -84,11 +84,15 @@ class BingoGame extends React.Component {
 
   componentDidMount() {
     const { getTopRecords: topRecords } = this.props;
+    const { records } = this.state;
     const { mnemonic } = store.session.get(STORE_KEY.WALLET_INFO);
     const wallet = AElf.wallet.getWalletByMnemonic(mnemonic);
     // get all records;
-    topRecords();
-    this.personalRecords();
+    if (records) {
+      topRecords();
+    } else {
+      this.personalRecords();
+    }
 
     const { sha256 } = AElf.utils;
     const aelf = new AElf(new AElf.providers.HttpProvider(localHttp));

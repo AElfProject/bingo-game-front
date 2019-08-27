@@ -52,16 +52,13 @@ class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      address: ''
     };
+    this.address = store.get(STORE_KEY.ADDRESS);
     this.switchLanguage = this.switchLanguage.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
 
   componentDidMount() {
-    this.setState({
-      address: store.get(STORE_KEY.ADDRESS)
-    });
   }
 
   getWalletFromKeyStore(password) {
@@ -101,7 +98,7 @@ class Login extends React.PureComponent {
   }
 
   render() {
-    const { address } = this.state;
+    // const { address } = this.state;
     const { t } = this.props;
     return (
       <div className="bingo-login">
@@ -115,7 +112,7 @@ class Login extends React.PureComponent {
           <List className="registerInputList">
             <InputItem
               className="inputItem"
-              value={address}
+              value={this.address}
               disabled
             />
           </List>
