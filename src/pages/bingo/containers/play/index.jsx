@@ -61,9 +61,8 @@ class BingoGame extends React.Component {
     super(props);
     this.state = {
       // When the contract is awarded, the page can be displayed
-      // loaded: false,
-      loaded: true,
-      cards: 0,
+      loaded: false,
+      cards: null,
       // Determine whether the input is correct
       inputHasError: false,
       errorMessage: 'Please enter a positive integer',
@@ -327,8 +326,8 @@ class BingoGame extends React.Component {
           </div>
           <h2>
           Your CARD：
-            <span>
-              {`${cards} `}
+            <span className="card-balance">
+              {cards}
             </span>
           CARD
           </h2>
@@ -344,6 +343,8 @@ class BingoGame extends React.Component {
               error={inputHasError}
               onErrorClick={this.onErrorClick}
               disabled={opening}
+              placeholder={t('bingoGameInputPlaceHolder')}
+              updatePlaceholder
             />
           </List>
 
@@ -352,7 +353,6 @@ class BingoGame extends React.Component {
             {t('batAmount')}
             ————
           </div>
-
           <Button
             className="btn"
             onClick={() => {
