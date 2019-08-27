@@ -57,7 +57,8 @@ export const resources = {
         'Your address information has not been detected locally. If you have already registered, you can ',
       scanRegister2: 'click here',
       scanRegister3: 'to scan the QRcode to restore your account information!',
-      errorMessage: 'Please enter a positive integer'
+      errorMessage: 'Please enter a positive integer',
+      bingoGameInputPlaceHolder: 'enter the number here'
     }
   },
   zh: {
@@ -112,7 +113,8 @@ export const resources = {
       scanRegister1: '未在本地检测到您的地址信息，若您已申请过游戏账号，可',
       scanRegister2: '点击此处',
       scanRegister3: '扫码恢复账号信息',
-      errorMessage: '请输入一个正整数'
+      errorMessage: '请输入一个正整数',
+      bingoGameInputPlaceHolder: '在这里输入'
     }
   }
 };

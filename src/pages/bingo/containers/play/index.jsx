@@ -63,7 +63,7 @@ class BingoGame extends React.Component {
     this.state = {
       // When the contract is awarded, the page can be displayed
       loaded: false,
-      cards: 0,
+      cards: null,
       // Determine whether the input is correct
       inputHasError: false,
       errorMessage: props.t('errorMessage'),
@@ -358,8 +358,8 @@ class BingoGame extends React.Component {
           </div>
           <h2>
           Your CARD：
-            <span className="h2Cards">
-              {`${cards} `}
+            <span className="card-balance">
+              {cards}
             </span>
           CARD
           </h2>
@@ -374,6 +374,8 @@ class BingoGame extends React.Component {
               error={inputHasError}
               onErrorClick={this.onErrorClick}
               disabled={opening}
+              placeholder={t('bingoGameInputPlaceHolder')}
+              updatePlaceholder
             />
           </List>
 
