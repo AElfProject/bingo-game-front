@@ -30,13 +30,8 @@ class Mnemonic extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mnemonic: ''
     };
-  }
-
-  componentDidMount() {
-    const { mnemonic } = store.session.get(STORE_KEY.WALLET_INFO);
-    this.setState({ mnemonic });
+    this.mnemonic = store.session.get(STORE_KEY.WALLET_INFO).mnemonic;
   }
 
   onDone = () => {
@@ -46,7 +41,6 @@ class Mnemonic extends React.Component {
 
   render() {
     const { t } = this.props;
-    const { mnemonic } = this.state;
     return (
       <InterfaceForQRAndMne
         key="mnemonic"
@@ -55,7 +49,7 @@ class Mnemonic extends React.Component {
         onDone={this.onDone}
       >
         <>
-          {mnemonic.split(' ').map(data => (
+          {this.mnemonic.split(' ').map(data => (
             <div key={data} className="word">{data}</div>
           ))}
         </>

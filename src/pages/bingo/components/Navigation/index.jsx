@@ -37,6 +37,15 @@ class Navigation extends React.Component {
     this.state = {
       visible: false,
     };
+    this.goBack = this.goBack.bind(this);
+  }
+
+  componentDidMount() {
+    document.querySelector('body').addEventListener('click', e => {
+      if (e.target.className === 'am-popover-mask') {
+        this.setState({ visible: false });
+      }
+    });
   }
 
   handleVisibleChange = visible => {
@@ -44,27 +53,6 @@ class Navigation extends React.Component {
       visible,
     });
   };
-
-  switchLanguage = async () => {
-    const { i18n } = this.props;
-    const { language: rightLanguage } = i18n;
-    let nextLanguage = 'en';
-    if (rightLanguage === 'en') {
-      nextLanguage = 'zh';
-    }
-    i18n.changeLanguage(nextLanguage);
-  }
-
-  pageJump = () => {
-    const { type, history } = this.props;
-    let path = null;
-    if (type === 'play') {
-      path = '/mnemonic';
-    } else if (type === 'mnemonic') {
-      path = '/play';
-    }
-    history.push(path);
-  }
 
   onSelect = opt => {
     const { history } = this.props;
@@ -86,14 +74,37 @@ class Navigation extends React.Component {
     });
   };
 
-  goBack = () => {
+  pageJump() {
+    const { type, history } = this.props;
+    let path = null;
+    if (type === 'play') {
+      path = '/mnemonic';
+    } else if (type === 'mnemonic') {
+      path = '/play';
+    }
+    history.push(path);
+  }
+
+  goBack() {
     const { history } = this.props;
     history.goBack();
   }
 
+  switchLanguage() {
+    const { i18n } = this.props;
+    const { language: rightLanguage } = i18n;
+    let nextLanguage = 'en';
+    if (rightLanguage === 'en') {
+      nextLanguage = 'zh';
+    }
+    i18n.changeLanguage(nextLanguage);
+  }
+
   render() {
     const { visible } = this.state;
-    const { title, type, t } = this.props;
+    const {
+      title, type, t, i18n: { language }
+    } = this.props;
     let item = null;
     if (type === 'play') {
       item = t('backupMnemonic');
@@ -102,10 +113,11 @@ class Navigation extends React.Component {
     }
     return (
       <NavBar
+        key={language}
         style={{ width: '100%', backgroundColor: 'transparent', color: 'white' }}
         mode="light"
-        icon={<Icon type="left" />}
-        onLeftClick={this.goBack}
+        // icon={<Icon type="left" />}
+        // onLeftClick={this.goBack}
         rightContent={(
           <Popover
             visible={visible}
@@ -114,11 +126,11 @@ class Navigation extends React.Component {
               offset: [0, 0],
             }}
             onSelect={this.onSelect}
-            mask="true"
+            mask
             overlay={[
               (<Item key="0" value="auxiliaries">{item}</Item>),
-              (<Item key="1" value="QRcode"><span style={{ marginRight: 5 }}>{t('exportQRcode')}</span></Item>),
-              (<Item key="2" value="language"><span style={{ marginRight: 5 }}>中/EN</span></Item>)
+              (<Item key="1" value="QRcode"><span>{t('exportQRcode')}</span></Item>),
+              (<Item key="2" value="language"><span>中/EN</span></Item>)
             ]}
           >
             <Icon key="1" type="ellipsis" />

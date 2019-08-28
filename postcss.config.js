@@ -10,7 +10,7 @@ module.exports = {
     'postcss-px-to-viewport': {
       viewportWidth:'414',
       exclude: [
-        /node_modules/,
+        // /node_modules/,
         /src\/pages\/Repairing/,
         /src\/components\/CopyRight/
       ]

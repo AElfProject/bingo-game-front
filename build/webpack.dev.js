@@ -60,7 +60,7 @@ const devConfig = {
     disableHostCheck: true,
     contentBase: OUTPUT_PATH,
     host: '0.0.0.0',
-    port: 9528,
+    port: 9527,
     compress: true,
     hot: false,
     open: true, // Auto open page after run yarn dev

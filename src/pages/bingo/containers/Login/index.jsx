@@ -52,17 +52,16 @@ class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      address: ''
     };
+    this.address = store.get(STORE_KEY.ADDRESS);
+    this.switchLanguage = this.switchLanguage.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
   componentDidMount() {
-    this.setState({
-      address: store.get(STORE_KEY.ADDRESS)
-    });
   }
 
-  getWalletFromKeyStore = password => {
+  getWalletFromKeyStore(password) {
     const { history, login: logToPlay } = this.props;
     const keyStore = store.get(STORE_KEY.KEY_STORE);
     const { mnemonic } = AElf.wallet.keyStore.unlockKeystore(keyStore, password);
@@ -70,9 +69,15 @@ class Login extends React.PureComponent {
     logToPlay(wallet);
     store.session.set(STORE_KEY.WALLET_INFO, wallet);
     history.push('/play');
-  };
+  }
 
-  handleLogin = () => {
+  onChange = password => {
+    this.setState({
+      password
+    });
+  }
+
+  handleLogin() {
     try {
       const { password } = this.state;
       this.getWalletFromKeyStore(password);
@@ -81,15 +86,9 @@ class Login extends React.PureComponent {
         Toast.info(e.errorMessage);
       }
     }
-  };
-
-  onChange = password => {
-    this.setState({
-      password
-    });
   }
 
-  switchLanguage = () => {
+  switchLanguage() {
     const { i18n } = this.props;
     let nextLanguage = 'en';
     if (i18n.language === 'en') {
@@ -99,7 +98,7 @@ class Login extends React.PureComponent {
   }
 
   render() {
-    const { address } = this.state;
+    // const { address } = this.state;
     const { t } = this.props;
     return (
       <div className="bingo-login">
@@ -113,7 +112,7 @@ class Login extends React.PureComponent {
           <List className="registerInputList">
             <InputItem
               className="inputItem"
-              value={address}
+              value={this.address}
               disabled
             />
           </List>
