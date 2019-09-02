@@ -18,7 +18,7 @@ import { getTopRecords, getPersonalRecords, saveRecordsResult } from '../../acti
 import RotateButton from '../../components/RotateButton';
 import ModalContent from '../../components/ModalContent';
 
-const setNumberData = [1000, 2000, 'Half', 'All-in'];
+const setNumberData = [10, 20, 'Half', 'All-in'];
 
 class BingoGame extends React.Component {
   static defaultProps = {
@@ -171,17 +171,18 @@ class BingoGame extends React.Component {
     const { cards } = this.state;
     const { t } = this.props;
     let inputCards = 0;
+    const [btn1st, btn2nd, btn3rd, btn4th] = setNumberData;
     switch (value) {
-      case 1000:
-        inputCards = 1000;
+      case btn1st:
+        inputCards = btn1st;
         break;
-      case 2000:
-        inputCards = 2000;
+      case btn2nd:
+        inputCards = btn2nd;
         break;
-      case 'Half':
+      case btn3rd:
         inputCards = parseInt(cards / 2, 10);
         break;
-      case 'All-In':
+      case btn4th:
         inputCards = parseInt(cards, 10);
         break;
       default:
