@@ -1,0 +1,19 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "total": 100,
+    "list": [
+      {
+        "address": "xxx",
+        "balance": 1231,
+        "times": 12321
+      },
+      {
+        "address": "yyy",
+        "balance": 1231,
+        "times": 12321
+      }
+    ]
+  }
+}

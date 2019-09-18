@@ -1,0 +1,244 @@
+@frameWidth: 200px;
+@marginTop: 10px;
+@btnColor: #2ffffe;
+@fontSize: 20px;
+
+@keyframes popUp{
+  from{
+    opacity: 0;
+    transform: translate(0, 20px);
+  }
+  to{
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.play {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 100vh;
+
+  .card-balance{
+    display: inline-block;
+    animation: popUp 0.5s 0.5s;
+    text-align: center;
+    .fake-input-placeholder{
+      font-size: 12px;
+    }
+  }
+}
+
+.inputList {
+  opacity: 0.6;
+  margin-bottom: @marginTop;
+
+  :first-child {
+    border-radius: 5px;
+  }
+
+  .inputItem {
+    width: @frameWidth;
+    height: 6vh;
+    background-color: @btnColor;
+  }
+}
+
+.title {
+  font-size: 8vh;
+  background: linear-gradient(to right, rgb(49, 255, 254), rgb(19, 128, 127));
+  background-clip: text;
+  color: transparent;
+}
+
+.whiteColor {
+  color: white;
+}
+
+.marginTop {
+  margin-top: @marginTop;
+}
+
+h2 {
+  .whiteColor;
+  margin: 0;
+  font-size: 24px;
+
+  .h2Cards {
+    color: rgb(255, 241, 127);
+  }
+}
+
+@btnHeight: 40px;
+.btn {
+  width: @frameWidth+15px;
+  height: 6vh;
+  font-size: 18px;
+  line-height: 6vh;
+  background-color: @btnColor;
+  margin-top: 1vh;
+}
+
+.recordFrame {
+  display: flex;
+  justify-content: space-around;
+  width: 80vw;
+  margin: 1vh 0;
+
+  .recordBtn {
+    width: 32vw;
+    height: 5.4vh;
+    height: @btnHeight;
+    line-height: @btnHeight;
+    background-color: @btnColor;
+  }
+
+  .activeRecordBtn {
+    color: #999999
+  }
+}
+
+.playTips {
+  .whiteColor;
+  width: 80%;
+  text-align: center;
+}
+
+.playBtnSmall{
+  display: none;
+}
+
+// Record.jsx
+@recordWidth: 80%;
+@recordHeight: 92vh;
+.record {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: @recordHeight;
+  overflow: hidden;
+}
+@titleHeight: 20px;
+.recordTitle {
+  .whiteColor;
+  height: @titleHeight;
+  width: @recordWidth;
+  margin-top: @marginTop;
+  padding: 0 @marginTop*1.5;
+}
+
+@showFrameWidth: 25px;
+.showFrame {
+  width: @showFrameWidth;
+  height: @showFrameWidth;
+  background-size: cover;
+  z-index: 1;
+}
+
+.recordShow {
+  .whiteColor;
+  height: 90%;
+  width: @recordWidth;
+  margin-top: @marginTop;
+  box-sizing: border-box;
+  padding: @marginTop @marginTop*1.5 @marginTop*2;
+
+  position: relative;
+  .record-tl {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: url(../../../../static/record-tl.png) no-repeat;
+    .showFrame;
+  }
+  .record-tr {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: url(../../../../static/record-tr.png) no-repeat;
+    .showFrame;
+  }
+  .record-bl {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: url(../../../../static/record-bl.png) no-repeat;
+    .showFrame;
+  }
+  .record-br {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: url(../../../../static/record-br.png) no-repeat;
+    .showFrame;
+  }
+
+  .recordContent {
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+
+    > .am-pull-to-refresh-content-wrapper {
+      height: 100%;
+      overflow-y: scroll;
+    }
+  }
+}
+
+.allRecords {
+  display: flex;
+  align-items: center;
+  margin-top: @marginTop;
+
+  > div {
+    display: inline-block;
+    width: 33.333%;
+    text-align: center;
+  }
+
+  > :first-child {
+    word-wrap: break-word;
+  }
+}
+
+.myRecords {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+
+  > div {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+  }
+}
+
+.bingo-play-modal {
+  > .am-modal-content {
+    padding: 0;
+
+    > .am-modal-body {
+      padding: 0;
+    }
+  }
+
+  .play-info- {
+    &1 {
+      margin-top: 60px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    &2 {
+      margin-top: 78px;
+    }
+    &3 {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+}

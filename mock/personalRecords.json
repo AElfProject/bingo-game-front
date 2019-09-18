@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "total": 100,
+    "list": [
+      {
+        "time": 1,
+        "result": -100
+      },
+      {
+        "time": 2,
+        "result": -100
+      }
+    ]
+  }
+}

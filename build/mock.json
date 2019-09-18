@@ -1,3 +1,7 @@
 {
-  "/api/test": "../mock/test.json"
+  "/api/test": "../mock/test.json",
+  "/bingo/register": "../mock/register.json",
+  "/bingo/topRecords": "../mock/topRecords.json",
+  "/bingo/personalRecords": "../mock/personalRecords.json",
+  "/bingo/recordResult": "../mock/recordRecords.json"
 }
