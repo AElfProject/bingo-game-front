@@ -34,7 +34,7 @@
     "cookie": "^0.4.0",
     "i18next": "^17.0.9",
     "i18next-browser-languagedetector": "^3.0.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "lodash-decorators": "^6.0.1",
     "memoize-one": "^5.0.5",
     "minireset.css": "^0.0.5",
